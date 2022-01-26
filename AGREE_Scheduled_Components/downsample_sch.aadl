@@ -1,0 +1,140 @@
+package Downsample_Sch
+public 
+   with Base_Types;
+      
+system A
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+	annex agree {** 
+		-- 	Virtual Events	
+		eq Dispatch: bool;
+		eq Complete: bool;		
+
+		guarantee A_Hold_Output "Output data should hold till next Complete" : 
+			not Complete => (Output = prev(Output, 0));
+							
+		guarantee "A output" : Complete => (Output = 1 + prev(Output, 0));
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		-- 	Virtual Events	
+		eq Dispatch: bool;
+		eq Complete: bool;	
+
+		guarantee B_Hold_Output "Output data should hold till next Complete" : 
+			not Complete => (Output = prev(Output, 0));
+							
+		guarantee "B output" :  Complete => (Output = Input);
+	**};	
+end B ; 
+
+system C
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		-- 	Virtual Events	
+		eq Dispatch: bool;
+		eq Complete: bool;	
+
+		guarantee C_Hold_Output "Output data should hold till next Complete" : 
+			not Complete => (Output = prev(Output, 0));
+							
+		guarantee "C output" :  Complete => (Output = Input);
+	**};	
+end C ; 
+
+system D
+	features
+		Input1: in data port Base_Types::Integer;
+		Input2: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		-- 	Virtual Events	
+		eq Dispatch: bool;
+		eq Complete: bool;	
+
+		guarantee D_Hold_Output "Output data should hold till next Complete" : 
+			not Complete => (Output = prev(Output, 0));
+							
+		guarantee "D output" :  Complete => (Output = Input1 - Input2);
+	**};	
+end D ; 
+  
+system top_level
+	features
+		x: out data port Base_Types::Integer;
+	annex agree {** 			
+		-- Counter starts with init + incr, reset to init
+
+
+		eq A_Dispatch: bool;
+		eq A_Complete: bool;
+		eq B_Dispatch: bool;
+		eq B_Complete: bool;
+		eq C_Dispatch: bool;
+		eq C_Complete: bool;
+		eq D_Dispatch: bool;
+		eq D_Complete: bool;
+					
+		node CircularCounter (init: int, incr: int, reset: bool)	
+		returns (count: int);
+		let
+			count = if reset then init
+					else init-> (pre(count) + incr);
+		tel;
+		
+		const PERIOD :	 int = 10;					
+
+		eq tick : int = CircularCounter(1, 1, prev(tick = PERIOD, false));
+
+		assume "Schedule ACABD" :
+			A_Dispatch = (tick = 1 or tick = 5) and
+			A_Complete = (tick = 2 or tick = 6) and					
+			B_Dispatch = (tick = 3) and	
+			B_Complete = (tick = 4) and
+			C_Dispatch = (tick = 7) and
+			C_Complete = (tick = 8) and	
+			D_Dispatch = (tick = 9) and
+			D_Complete = (tick = 10);								
+
+		-- Note: this works with SMT solver SMTInterpol, not Z3.			
+	    guarantee "System output" : D_Complete => (x = -1);				
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents 
+		A_sub : system A ; 
+		B_sub : system B ;
+		C_sub : system C ; 
+		D_sub : system D ;		 
+	connections		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_sub.Output -> C_sub.Input {Communication_Properties::Timing => immediate;};
+		B_TO_D : port B_sub.Output -> D_sub.Input1 {Communication_Properties::Timing => immediate;};
+		C_TO_D : port C_sub.Output -> D_sub.Input2 {Communication_Properties::Timing => immediate;};
+		D_TO_Output : port D_sub.Output -> x {Communication_Properties::Timing => immediate;}; 
+
+	annex agree {**
+		assign A_Dispatch = A_sub.Dispatch;
+		assign A_Complete = A_sub.Complete;	
+		assign B_Dispatch = B_sub.Dispatch;
+		assign B_Complete = B_sub.Complete;
+		assign C_Dispatch = C_sub.Dispatch;
+		assign C_Complete = C_sub.Complete;	
+		assign D_Dispatch = D_sub.Dispatch;
+		assign D_Complete = D_sub.Complete;
+	**};
+			
+end top_level.Impl;
+	
+end Downsample_Sch;

@@ -1,0 +1,1685 @@
+-- AUTO GENERATED 
+type CMASI__VehicleAction__i = struct {AssociatedTaskList : int[1]};
+type CMASI__AutomationResponse__i = struct {Info : CMASI__KeyValuePair__i[1]; MissionCommandList : CMASI__MissionCommand__i[1]; VehicleCommandList : CMASI__VehicleActionCommand__i[1]};
+type CMASI__AddressAttributedMessage__i = struct {id : CMASI__Address__i; payload : CMASI__LMCPObject__i};
+type CASE_Model_Transformations__CASE_MsgHeader__Impl = struct {HMAC : bool; dst : int; src : int; trusted : bool};
+type CMASI__Location3D__i = struct {Altitude : real; AltitudeType : int; Latitude : real; Longitude : real};
+type CMASI__AddressArray__i = struct {value : CMASI__Address__i[3]};
+type CMASI__PayloadState__i = struct {Parameters : CMASI__KeyValuePair__i[1]; PayloadID : int};
+type CMASI__MissionCommand__i = struct {CommandID : int; FirstWaypoint : int; Status : int; VehicleActionList : CMASI__VehicleAction__i[1]; VehicleID : int; WaypointList : CMASI__Waypoint__i[3]};
+type CMASI__OperatingRegion__i = struct {ID : int; KeepInAreas : int[1]; KeepOutAreas : int[1]};
+type CMASI__Waypoint__i = struct {Altitude : real; AltitudeType : int; AssociatedTasks : int[1]; ClimbRate : real; ContingencyWaypointA : int; ContingencyWaypointB : int; Latitude : real; Longitude : real; NextWaypoint : int; Number : int; Speed : real; SpeedType : int; TurnType : int; VehicleActionList : CMASI__VehicleAction__i[1]};
+type CASE_Model_Transformations__CASE_RF_Msg__Impl = struct {header : CASE_Model_Transformations__CASE_MsgHeader__Impl};
+type CASE_Model_Transformations__CASE_AttestationResponseMsg__Impl = struct {header : CASE_Model_Transformations__CASE_MsgHeader__Impl; status : bool};
+type CMASI__Polygon__i = struct {BoundaryPointsList : CMASI__Location3D__i[2]};
+type CMASI__LineSearchTask__i = struct {DesiredWavelengthBands : int[8]; DwellTime : int; EligibleEntities : int[1]; GroundSampleDistance : real; Parameters : CMASI__KeyValuePair__i[1]; PointList : CMASI__Location3D__i[3]; Priority : int; Required : bool; RevisitRate : real; TaskID : int; UseInertialViewAngles : bool; ViewAngleList : CMASI__Wedge__i[16]};
+type CMASI__Address__i = struct {value : int[4]};
+type CASE_Model_Transformations__CASE_UART_Msg__Impl = struct {crc : bool};
+type CMASI__VehicleActionCommand__i = struct {CommandID : int; Status : int; VehicleActionList : CMASI__VehicleAction__i[1]; VehicleID : int};
+type CMASI__AutomationRequest__i = struct {EntityList : int[1]; OperatingRegion : int; RedoAllTasks : bool; TaskList : int[1]; TaskListSize : int};
+type CMASI__LMCPObject__i = struct {AutomationRequest : CMASI__AutomationRequest__i; AutomationResponse : CMASI__AutomationResponse__i; LineSearchTask : CMASI__LineSearchTask__i; OperatingRegion : CMASI__OperatingRegion__i};
+type CMASI__Wedge__i = struct {AzimuthCenterline : real; AzimuthExtent : real; VerticalCenterline : real; VerticalExtent : real};
+type CMASI__AirVehicleState__i = struct {ActualEnergyRate : real; Airspeed : real; AssociatedTasks : int[1]; Course : real; CurrentCommand : int; CurrentWaypoint : int; EnergyAvailable : real; FIXMEMode : int; Groundspeed : real; Heading : real; ID : int; Info : CMASI__KeyValuePair__i[1]; Location : CMASI__Location3D__i; PayloadStateList : CMASI__PayloadState__i[1]; Pitch : real; Roll : real; Time : int; VerticalSpeed : real; WindDirection : real; WindSpeed : real; p : real; q : real; r : real; u : real; udot : real; v : real; vdot : real; w : real; wdot : real};
+type CASE_Model_Transformations__CASE_AttestationRequestMsg__Impl = struct {header : CASE_Model_Transformations__CASE_MsgHeader__Impl};
+type CMASI__KeyValuePair__i = struct {Key : int; Value : int};
+type Base_Types__Boolean = bool;
+type Base_Types__Unsigned = int;
+type Base_Types__Unsigned_64 = int;
+type Base_Types__Unsigned_32 = int;
+type Base_Types__Unsigned_16 = int;
+type Base_Types__Unsigned_8 = int;
+type Base_Types__Integer = int;
+type Base_Types__Integer_64 = int;
+type Base_Types__Integer_32 = int;
+type Base_Types__Integer_16 = int;
+type Base_Types__Integer_8 = int;
+type Base_Types__Float = real;
+type Base_Types__Float_32 = real;
+type Base_Types__Float_64 = real;
+
+node _TOP__FC_UART(
+  __ASSUME__HIST : bool;
+  __ASSUME0 : bool;
+  __ASSUME1 : bool;
+  recv_data___EVENT_ : bool;
+  recv_data : CASE_Model_Transformations__CASE_UART_Msg__Impl;
+  MissionCommand___EVENT_ : bool;
+  MissionCommand : CMASI__MissionCommand__i;
+  time : real;
+  send_data___EVENT_ : bool;
+  send_data : CASE_Model_Transformations__CASE_UART_Msg__Impl;
+  AirVehicleState_WPM___EVENT_ : bool;
+  AirVehicleState_WPM : CMASI__AirVehicleState__i;
+  AirVehicleState_UXAS___EVENT_ : bool;
+  AirVehicleState_UXAS : CMASI__AirVehicleState__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+  __GUARANTEE1 : bool;
+  __GUARANTEE2 : bool;
+let
+  __GUARANTEE0 = (send_data___EVENT_ => CASEAgree__WellformedCASE_UART_Msg(send_data));
+
+  __GUARANTEE1 = (AirVehicleState_WPM___EVENT_ => CASEAgree__WELL_FORMED_AIR_VEHICLE_STATE(AirVehicleState_WPM));
+
+  __GUARANTEE2 = (AirVehicleState_WPM___EVENT_ => CASEAgree__WELL_FORMED_AIR_VEHICLE_STATE(AirVehicleState_UXAS));
+
+  __ASSERT = ((__ASSUME__HIST => (__GUARANTEE2 and (__GUARANTEE1 and __GUARANTEE0))) and ((__ASSUME1 = (MissionCommand___EVENT_ => CASEAgree__WELL_FORMED_MISSION_COMMAND(MissionCommand))) and (__ASSUME0 = (recv_data___EVENT_ => CASEAgree__WellformedCASE_UART_Msg(recv_data)))));
+
+  --%IVC __GUARANTEE0, __GUARANTEE1, __GUARANTEE2;
+
+tel;
+
+node _TOP__RADIO(
+  __ASSUME__HIST : bool;
+  __ASSUME0 : bool;
+  am_request___EVENT_ : bool;
+  am_request : CASE_Model_Transformations__CASE_AttestationRequestMsg__Impl;
+  recv_data___EVENT_ : bool;
+  recv_data : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  time : real;
+  am_response___EVENT_ : bool;
+  am_response : CASE_Model_Transformations__CASE_AttestationResponseMsg__Impl;
+  send_data___EVENT_ : bool;
+  send_data : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  AutomationRequest___EVENT_ : bool;
+  AutomationRequest : CMASI__AddressAttributedMessage__i;
+  OperatingRegion___EVENT_ : bool;
+  OperatingRegion : CMASI__AddressAttributedMessage__i;
+  LineSearchTask___EVENT_ : bool;
+  LineSearchTask : CMASI__AddressAttributedMessage__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (send_data___EVENT_ => CASEAgree__WellformedCASE_RF_Msg(send_data, 400, 500));
+
+  __ASSERT = ((__ASSUME__HIST => __GUARANTEE0) and (__ASSUME0 = (recv_data___EVENT_ => CASEAgree__WellformedCASE_RF_Msg(recv_data, 500, 400))));
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__FlyZones(
+  __ASSUME__HIST : bool;
+  time : real;
+  keep_in_zones : CMASI__Polygon__i;
+  keep_out_zones : CMASI__Polygon__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+  __GUARANTEE1 : bool;
+  __GUARANTEE2 : bool;
+  __GUARANTEE3 : bool;
+let
+  __GUARANTEE0 = (true -> (keep_in_zones = (pre keep_in_zones)));
+
+  __GUARANTEE1 = (true -> (keep_out_zones = (pre keep_out_zones)));
+
+  __GUARANTEE2 = CASEAgree__WELL_FORMED_ZONES(keep_in_zones);
+
+  __GUARANTEE3 = CASEAgree__WELL_FORMED_ZONES(keep_out_zones);
+
+  __ASSERT = (__ASSUME__HIST => (__GUARANTEE3 and (__GUARANTEE2 and (__GUARANTEE1 and __GUARANTEE0))));
+
+  --%IVC __GUARANTEE0, __GUARANTEE1, __GUARANTEE2, __GUARANTEE3;
+
+tel;
+
+node _TOP__UXAS(
+  __ASSUME__HIST : bool;
+  __ASSUME0 : bool;
+  AutomationRequest___EVENT_ : bool;
+  AutomationRequest : CMASI__AutomationRequest__i;
+  AirVehicleState___EVENT_ : bool;
+  AirVehicleState : CMASI__AirVehicleState__i;
+  OperatingRegion___EVENT_ : bool;
+  OperatingRegion : CMASI__OperatingRegion__i;
+  LineSearchTask___EVENT_ : bool;
+  LineSearchTask : CMASI__LineSearchTask__i;
+  time : real;
+  wellFormedAutomationRequest : bool;
+  wellFormedLineSearchTask : bool;
+  wellFormedOperatingRegion : bool;
+  wellFormedAirVehicleState : bool;
+  AutomationResponse___EVENT_ : bool;
+  AutomationResponse : CMASI__AutomationResponse__i
+) returns (
+  __ASSERT : bool
+);
+let
+  __ASSERT = ((wellFormedAirVehicleState = (AirVehicleState___EVENT_ => CASEAgree__WELL_FORMED_AIR_VEHICLE_STATE(AirVehicleState))) and ((wellFormedOperatingRegion = (OperatingRegion___EVENT_ => CASEAgree__WELL_FORMED_OPERATING_REGION(OperatingRegion))) and ((wellFormedLineSearchTask = (LineSearchTask___EVENT_ => CASEAgree__WELL_FORMED_LINE_SEARCH_TASK(LineSearchTask))) and ((wellFormedAutomationRequest = (AutomationRequest___EVENT_ => CASEAgree__WELL_FORMED_AUTOMATION_REQUEST(AutomationRequest))) and ((__ASSUME__HIST => true) and (__ASSUME0 = (((wellFormedAutomationRequest and wellFormedLineSearchTask) and wellFormedOperatingRegion) and wellFormedAirVehicleState)))))));
+
+tel;
+
+node _TOP__WPM(
+  __ASSUME__HIST : bool;
+  __ASSUME0 : bool;
+  __ASSUME1 : bool;
+  __ASSUME2 : bool;
+  AutomationResponse___EVENT_ : bool;
+  AutomationResponse : CMASI__AutomationResponse__i;
+  AirVehicleState___EVENT_ : bool;
+  AirVehicleState : CMASI__AirVehicleState__i;
+  ReturnHome___EVENT_ : bool;
+  time : real;
+  MissionCommand___EVENT_ : bool;
+  MissionCommand : CMASI__MissionCommand__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (MissionCommand___EVENT_ => CASEAgree__WELL_FORMED_MISSION_COMMAND(MissionCommand));
+
+  __ASSERT = ((__ASSUME__HIST => __GUARANTEE0) and ((__ASSUME2 = (AirVehicleState___EVENT_ => CASEAgree__WELL_FORMED_AIR_VEHICLE_STATE(AirVehicleState))) and ((__ASSUME1 = (AutomationResponse___EVENT_ => CASEAgree__WELL_FORMED_AUTOMATION_RESPONSE(AutomationResponse))) and (__ASSUME0 = ((ReturnHome___EVENT_ => (not AutomationResponse___EVENT_)) and (AutomationResponse___EVENT_ => (not ReturnHome___EVENT_)))))));
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__AM(
+  __ASSUME__HIST : bool;
+  attestation_response___EVENT_ : bool;
+  attestation_response : CASE_Model_Transformations__CASE_AttestationResponseMsg__Impl;
+  time : real;
+  trusted_ids : CMASI__AddressArray__i;
+  attestation_request___EVENT_ : bool;
+  attestation_request : CASE_Model_Transformations__CASE_AttestationRequestMsg__Impl
+) returns (
+  __ASSERT : bool
+);
+let
+  __ASSERT = (__ASSUME__HIST => true);
+
+tel;
+
+node _TOP__AM_Gate(
+  __ASSUME__HIST : bool;
+  trusted_ids : CMASI__AddressArray__i;
+  AutomationRequest_in___EVENT_ : bool;
+  AutomationRequest_in : CMASI__AddressAttributedMessage__i;
+  OperatingRegion_in___EVENT_ : bool;
+  OperatingRegion_in : CMASI__AddressAttributedMessage__i;
+  LineSearchTask_in___EVENT_ : bool;
+  LineSearchTask_in : CMASI__AddressAttributedMessage__i;
+  time : real;
+  AutomationRequest_out___EVENT_ : bool;
+  AutomationRequest_out : CMASI__AutomationRequest__i;
+  OperatingRegion_out___EVENT_ : bool;
+  OperatingRegion_out : CMASI__OperatingRegion__i;
+  LineSearchTask_out___EVENT_ : bool;
+  LineSearchTask_out : CMASI__LineSearchTask__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (if (AutomationRequest_in___EVENT_ and CASEAgree__IS_TRUSTED(trusted_ids, AutomationRequest_in.id)) then ((AutomationRequest_out___EVENT_ and (not (OperatingRegion_out___EVENT_ or LineSearchTask_out___EVENT_))) and (AutomationRequest_out = AutomationRequest_in.payload.AutomationRequest)) else (if (OperatingRegion_in___EVENT_ and CASEAgree__IS_TRUSTED(trusted_ids, OperatingRegion_in.id)) then ((OperatingRegion_out___EVENT_ and (not (AutomationRequest_out___EVENT_ or LineSearchTask_out___EVENT_))) and (OperatingRegion_out = OperatingRegion_in.payload.OperatingRegion)) else (if (LineSearchTask_in___EVENT_ and CASEAgree__IS_TRUSTED(trusted_ids, LineSearchTask_in.id)) then ((LineSearchTask_out___EVENT_ and (not (AutomationRequest_out___EVENT_ or OperatingRegion_out___EVENT_))) and (LineSearchTask_out = LineSearchTask_in.payload.LineSearchTask)) else (not ((AutomationRequest_out___EVENT_ or OperatingRegion_out___EVENT_) or LineSearchTask_out___EVENT_)))));
+
+  __ASSERT = (__ASSUME__HIST => __GUARANTEE0);
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__FLT_AReq(
+  __ASSUME__HIST : bool;
+  filter_in___EVENT_ : bool;
+  filter_in : CMASI__AutomationRequest__i;
+  time : real;
+  filter_out_UXAS___EVENT_ : bool;
+  filter_out_UXAS : CMASI__AutomationRequest__i;
+  filter_out_MON_REQ___EVENT_ : bool;
+  filter_out_MON_REQ : CMASI__AutomationRequest__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (if (filter_in___EVENT_ and CASEAgree__WELL_FORMED_AUTOMATION_REQUEST(filter_in)) then (((filter_out_UXAS___EVENT_ and filter_out_MON_REQ___EVENT_) and (filter_out_UXAS = filter_in)) and (filter_out_MON_REQ = filter_in)) else ((not filter_out_UXAS___EVENT_) and (not filter_out_MON_REQ___EVENT_)));
+
+  __ASSERT = (__ASSUME__HIST => __GUARANTEE0);
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__FLT_OR(
+  __ASSUME__HIST : bool;
+  filter_in___EVENT_ : bool;
+  filter_in : CMASI__OperatingRegion__i;
+  time : real;
+  filter_out___EVENT_ : bool;
+  filter_out : CMASI__OperatingRegion__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (if (filter_in___EVENT_ and CASEAgree__WELL_FORMED_OPERATING_REGION(filter_in)) then (filter_out___EVENT_ and (filter_out = filter_in)) else (not filter_out___EVENT_));
+
+  __ASSERT = (__ASSUME__HIST => __GUARANTEE0);
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__FLT_LST(
+  __ASSUME__HIST : bool;
+  filter_in___EVENT_ : bool;
+  filter_in : CMASI__LineSearchTask__i;
+  time : real;
+  filter_out___EVENT_ : bool;
+  filter_out : CMASI__LineSearchTask__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (if (filter_in___EVENT_ and CASEAgree__WELL_FORMED_LINE_SEARCH_TASK(filter_in)) then (filter_out___EVENT_ and (filter_out = filter_in)) else (not filter_out___EVENT_));
+
+  __ASSERT = (__ASSUME__HIST => __GUARANTEE0);
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__MON_REQ(
+  __ASSUME__HIST : bool;
+  resp___EVENT_ : bool;
+  resp : CMASI__AutomationResponse__i;
+  reqt___EVENT_ : bool;
+  reqt : CMASI__AutomationRequest__i;
+  time : real;
+  ticks : int;
+  Policy : bool;
+  alert___EVENT_ : bool
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (alert___EVENT_ = ((not Policy) -> (if true then AGREE_PLTL__Once((not Policy)) else (not Policy))));
+
+  __ASSERT = ((Policy = (ticks < 10)) and ((ticks = ((if resp___EVENT_ then (10 + 1) else (if reqt___EVENT_ then 1 else 0)) -> (if (reqt___EVENT_ and resp___EVENT_) then (10 + 1) else (if (not (reqt___EVENT_ or resp___EVENT_)) then (if ((pre ticks) = 0) then 0 else SW__CASE_Monitor_Req_thr__Inc((pre ticks))) else (if resp___EVENT_ then (if (1 <= (pre ticks)) then 0 else (10 + 1)) else 1))))) and (__ASSUME__HIST => __GUARANTEE0)));
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__FLT_ARes(
+  __ASSUME__HIST : bool;
+  filter_in___EVENT_ : bool;
+  filter_in : CMASI__AutomationResponse__i;
+  time : real;
+  filter_out___EVENT_ : bool;
+  filter_out : CMASI__AutomationResponse__i
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (if (filter_in___EVENT_ and CASEAgree__WELL_FORMED_AUTOMATION_RESPONSE(filter_in)) then (filter_out___EVENT_ and (filter_out = filter_in)) else (not filter_out___EVENT_));
+
+  __ASSERT = (__ASSUME__HIST => __GUARANTEE0);
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__MON_GEO(
+  __ASSUME__HIST : bool;
+  keep_in_zones : CMASI__Polygon__i;
+  keep_out_zones : CMASI__Polygon__i;
+  observed___EVENT_ : bool;
+  observed : CMASI__AutomationResponse__i;
+  time : real;
+  Policy : bool;
+  output___EVENT_ : bool;
+  output : CMASI__AutomationResponse__i;
+  alert___EVENT_ : bool
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+  __GUARANTEE1 : bool;
+let
+  __GUARANTEE0 = (alert___EVENT_ = ((not Policy) -> (if true then AGREE_PLTL__Once((not Policy)) else (not Policy))));
+
+  __GUARANTEE1 = (if alert___EVENT_ then (not output___EVENT_) else (if observed___EVENT_ then (output___EVENT_ and (output = observed)) else (not output___EVENT_)));
+
+  __ASSERT = ((Policy = (observed___EVENT_ => ((CASEAgree__WAYPOINTS_IN_ZONE(CASEAgree__GET_MISSION_COMMAND(observed), keep_in_zones) and CASEAgree__WAYPOINTS_NOT_IN_ZONE(CASEAgree__GET_MISSION_COMMAND(observed), keep_out_zones)) and (not CASEAgree__DUPLICATES_IN_MISSION(CASEAgree__GET_MISSION_COMMAND(observed)))))) and (__ASSUME__HIST => (__GUARANTEE1 and __GUARANTEE0)));
+
+  --%IVC __GUARANTEE0, __GUARANTEE1;
+
+tel;
+
+node main(
+  FC_UART__send_data___EVENT_ : bool;
+  FC_UART__send_data : CASE_Model_Transformations__CASE_UART_Msg__Impl;
+  FC_UART__AirVehicleState_WPM___EVENT_ : bool;
+  FC_UART__AirVehicleState_WPM : CMASI__AirVehicleState__i;
+  FC_UART__AirVehicleState_UXAS___EVENT_ : bool;
+  FC_UART__AirVehicleState_UXAS : CMASI__AirVehicleState__i;
+  FC_UART____ASSUME0 : bool;
+  FC_UART____ASSUME1 : bool;
+  FC_UART____ASSUME__HIST : bool;
+  RADIO__am_response___EVENT_ : bool;
+  RADIO__am_response : CASE_Model_Transformations__CASE_AttestationResponseMsg__Impl;
+  RADIO__send_data___EVENT_ : bool;
+  RADIO__send_data : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  RADIO__AutomationRequest___EVENT_ : bool;
+  RADIO__AutomationRequest : CMASI__AddressAttributedMessage__i;
+  RADIO__OperatingRegion___EVENT_ : bool;
+  RADIO__OperatingRegion : CMASI__AddressAttributedMessage__i;
+  RADIO__LineSearchTask___EVENT_ : bool;
+  RADIO__LineSearchTask : CMASI__AddressAttributedMessage__i;
+  RADIO____ASSUME0 : bool;
+  RADIO____ASSUME__HIST : bool;
+  FlyZones__keep_in_zones : CMASI__Polygon__i;
+  FlyZones__keep_out_zones : CMASI__Polygon__i;
+  FlyZones____ASSUME__HIST : bool;
+  UXAS__wellFormedAutomationRequest : bool;
+  UXAS__wellFormedLineSearchTask : bool;
+  UXAS__wellFormedOperatingRegion : bool;
+  UXAS__wellFormedAirVehicleState : bool;
+  UXAS__AutomationResponse___EVENT_ : bool;
+  UXAS__AutomationResponse : CMASI__AutomationResponse__i;
+  UXAS____ASSUME0 : bool;
+  UXAS____ASSUME__HIST : bool;
+  WPM__MissionCommand___EVENT_ : bool;
+  WPM__MissionCommand : CMASI__MissionCommand__i;
+  WPM____ASSUME0 : bool;
+  WPM____ASSUME1 : bool;
+  WPM____ASSUME2 : bool;
+  WPM____ASSUME__HIST : bool;
+  AM__trusted_ids : CMASI__AddressArray__i;
+  AM__attestation_request___EVENT_ : bool;
+  AM__attestation_request : CASE_Model_Transformations__CASE_AttestationRequestMsg__Impl;
+  AM____ASSUME__HIST : bool;
+  AM_Gate__AutomationRequest_out___EVENT_ : bool;
+  AM_Gate__AutomationRequest_out : CMASI__AutomationRequest__i;
+  AM_Gate__OperatingRegion_out___EVENT_ : bool;
+  AM_Gate__OperatingRegion_out : CMASI__OperatingRegion__i;
+  AM_Gate__LineSearchTask_out___EVENT_ : bool;
+  AM_Gate__LineSearchTask_out : CMASI__LineSearchTask__i;
+  AM_Gate____ASSUME__HIST : bool;
+  FLT_AReq__filter_out_UXAS___EVENT_ : bool;
+  FLT_AReq__filter_out_UXAS : CMASI__AutomationRequest__i;
+  FLT_AReq__filter_out_MON_REQ___EVENT_ : bool;
+  FLT_AReq__filter_out_MON_REQ : CMASI__AutomationRequest__i;
+  FLT_AReq____ASSUME__HIST : bool;
+  FLT_OR__filter_out___EVENT_ : bool;
+  FLT_OR__filter_out : CMASI__OperatingRegion__i;
+  FLT_OR____ASSUME__HIST : bool;
+  FLT_LST__filter_out___EVENT_ : bool;
+  FLT_LST__filter_out : CMASI__LineSearchTask__i;
+  FLT_LST____ASSUME__HIST : bool;
+  MON_REQ__ticks : int;
+  MON_REQ__Policy : bool;
+  MON_REQ__alert___EVENT_ : bool;
+  MON_REQ____ASSUME__HIST : bool;
+  FLT_ARes__filter_out___EVENT_ : bool;
+  FLT_ARes__filter_out : CMASI__AutomationResponse__i;
+  FLT_ARes____ASSUME__HIST : bool;
+  MON_GEO__Policy : bool;
+  MON_GEO__output___EVENT_ : bool;
+  MON_GEO__output : CMASI__AutomationResponse__i;
+  MON_GEO__alert___EVENT_ : bool;
+  MON_GEO____ASSUME__HIST : bool;
+  trusted_ids : CMASI__AddressArray__i;
+  trustedAutomationRequest : bool;
+  trustedLineSearchTask : bool;
+  trustedOperatingRegion : bool;
+  keep_in_zones : CMASI__Polygon__i;
+  keep_out_zones : CMASI__Polygon__i;
+  obeysKeepInZones : bool;
+  obeysKeepOutZones : bool;
+  noDuplicates : bool;
+  UxasObeysKeepInZones : bool;
+  UxasObeysKeepOutZones : bool;
+  UxasWellFormedAutomationResponse : bool;
+  trustedSourcesOnly : bool;
+  geoFenced : bool;
+  waypointsFromLineSearch : bool;
+  radio_send___EVENT_ : bool;
+  radio_send : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  uart_send___EVENT_ : bool;
+  uart_send : CASE_Model_Transformations__CASE_UART_Msg__Impl;
+  FC_UART__recv_data___EVENT_ : bool;
+  FC_UART__recv_data : CASE_Model_Transformations__CASE_UART_Msg__Impl;
+  FC_UART__MissionCommand___EVENT_ : bool;
+  FC_UART__MissionCommand : CMASI__MissionCommand__i;
+  FC_UART__time : real;
+  RADIO__am_request___EVENT_ : bool;
+  RADIO__am_request : CASE_Model_Transformations__CASE_AttestationRequestMsg__Impl;
+  RADIO__recv_data___EVENT_ : bool;
+  RADIO__recv_data : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  RADIO__time : real;
+  FlyZones__time : real;
+  UXAS__AutomationRequest___EVENT_ : bool;
+  UXAS__AutomationRequest : CMASI__AutomationRequest__i;
+  UXAS__AirVehicleState___EVENT_ : bool;
+  UXAS__AirVehicleState : CMASI__AirVehicleState__i;
+  UXAS__OperatingRegion___EVENT_ : bool;
+  UXAS__OperatingRegion : CMASI__OperatingRegion__i;
+  UXAS__LineSearchTask___EVENT_ : bool;
+  UXAS__LineSearchTask : CMASI__LineSearchTask__i;
+  UXAS__time : real;
+  WPM__AutomationResponse___EVENT_ : bool;
+  WPM__AutomationResponse : CMASI__AutomationResponse__i;
+  WPM__AirVehicleState___EVENT_ : bool;
+  WPM__AirVehicleState : CMASI__AirVehicleState__i;
+  WPM__ReturnHome___EVENT_ : bool;
+  WPM__time : real;
+  AM__attestation_response___EVENT_ : bool;
+  AM__attestation_response : CASE_Model_Transformations__CASE_AttestationResponseMsg__Impl;
+  AM__time : real;
+  AM_Gate__trusted_ids : CMASI__AddressArray__i;
+  AM_Gate__AutomationRequest_in___EVENT_ : bool;
+  AM_Gate__AutomationRequest_in : CMASI__AddressAttributedMessage__i;
+  AM_Gate__OperatingRegion_in___EVENT_ : bool;
+  AM_Gate__OperatingRegion_in : CMASI__AddressAttributedMessage__i;
+  AM_Gate__LineSearchTask_in___EVENT_ : bool;
+  AM_Gate__LineSearchTask_in : CMASI__AddressAttributedMessage__i;
+  AM_Gate__time : real;
+  FLT_AReq__filter_in___EVENT_ : bool;
+  FLT_AReq__filter_in : CMASI__AutomationRequest__i;
+  FLT_AReq__time : real;
+  FLT_OR__filter_in___EVENT_ : bool;
+  FLT_OR__filter_in : CMASI__OperatingRegion__i;
+  FLT_OR__time : real;
+  FLT_LST__filter_in___EVENT_ : bool;
+  FLT_LST__filter_in : CMASI__LineSearchTask__i;
+  FLT_LST__time : real;
+  MON_REQ__resp___EVENT_ : bool;
+  MON_REQ__resp : CMASI__AutomationResponse__i;
+  MON_REQ__reqt___EVENT_ : bool;
+  MON_REQ__reqt : CMASI__AutomationRequest__i;
+  MON_REQ__time : real;
+  FLT_ARes__filter_in___EVENT_ : bool;
+  FLT_ARes__filter_in : CMASI__AutomationResponse__i;
+  FLT_ARes__time : real;
+  MON_GEO__keep_in_zones : CMASI__Polygon__i;
+  MON_GEO__keep_out_zones : CMASI__Polygon__i;
+  MON_GEO__observed___EVENT_ : bool;
+  MON_GEO__observed : CMASI__AutomationResponse__i;
+  MON_GEO__time : real;
+  radio_recv___EVENT_ : bool;
+  radio_recv : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  uart_recv___EVENT_ : bool;
+  uart_recv : CASE_Model_Transformations__CASE_UART_Msg__Impl;
+  RADIO_Dispatch : bool;
+  RADIO_Complete : bool;
+  AM_Dispatch : bool;
+  AM_Complete : bool;
+  AM_Gate_Dispatch : bool;
+  AM_Gate_Complete : bool;
+  FLT_AReq_Dispatch : bool;
+  FLT_AReq_Complete : bool;
+  FLT_LST_Dispatch : bool;
+  FLT_LST_Complete : bool;
+  FLT_OR_Dispatch : bool;
+  FLT_OR_Complete : bool;
+  UXAS_Dispatch : bool;
+  UXAS_Complete : bool;
+  FlyZones_Dispatch : bool;
+  FlyZones_Complete : bool;
+  MON_REQ_Dispatch : bool;
+  MON_REQ_Complete : bool;
+  FLT_ARes_Dispatch : bool;
+  FLT_ARes_Complete : bool;
+  MON_GEO_Dispatch : bool;
+  MON_GEO_Complete : bool;
+  WPM_Dispatch : bool;
+  WPM_Complete : bool;
+  FC_UART_Dispatch : bool;
+  FC_UART_Complete : bool;
+  tick : int;
+  time : real
+) returns (
+
+);
+var
+  __ASSUME0 : bool;
+  __ASSUME1 : bool;
+  __ASSUME__HIST : bool;
+  __LEMMA0 : bool;
+  __ASSUME999 : bool;
+  FC_UART__recv_data___EVENT__ASSUME : bool;
+  FC_UART__recv_data_ASSUME : bool;
+  FC_UART__MissionCommand___EVENT__ASSUME : bool;
+  FC_UART__MissionCommand_ASSUME : bool;
+  RADIO__am_request___EVENT__ASSUME : bool;
+  RADIO__am_request_ASSUME : bool;
+  RADIO__recv_data___EVENT__ASSUME : bool;
+  RADIO__recv_data_ASSUME : bool;
+  UXAS__AutomationRequest___EVENT__ASSUME : bool;
+  UXAS__AutomationRequest_ASSUME : bool;
+  UXAS__AirVehicleState___EVENT__ASSUME : bool;
+  UXAS__AirVehicleState_ASSUME : bool;
+  UXAS__OperatingRegion___EVENT__ASSUME : bool;
+  UXAS__OperatingRegion_ASSUME : bool;
+  UXAS__LineSearchTask___EVENT__ASSUME : bool;
+  UXAS__LineSearchTask_ASSUME : bool;
+  WPM__AutomationResponse___EVENT__ASSUME : bool;
+  WPM__AutomationResponse_ASSUME : bool;
+  WPM__AirVehicleState___EVENT__ASSUME : bool;
+  WPM__AirVehicleState_ASSUME : bool;
+  WPM__ReturnHome___EVENT__ASSUME : bool;
+  AM__attestation_response___EVENT__ASSUME : bool;
+  AM__attestation_response_ASSUME : bool;
+  AM_Gate__trusted_ids_ASSUME : bool;
+  AM_Gate__AutomationRequest_in___EVENT__ASSUME : bool;
+  AM_Gate__AutomationRequest_in_ASSUME : bool;
+  AM_Gate__OperatingRegion_in___EVENT__ASSUME : bool;
+  AM_Gate__OperatingRegion_in_ASSUME : bool;
+  AM_Gate__LineSearchTask_in___EVENT__ASSUME : bool;
+  AM_Gate__LineSearchTask_in_ASSUME : bool;
+  FLT_AReq__filter_in___EVENT__ASSUME : bool;
+  FLT_AReq__filter_in_ASSUME : bool;
+  FLT_OR__filter_in___EVENT__ASSUME : bool;
+  FLT_OR__filter_in_ASSUME : bool;
+  FLT_LST__filter_in___EVENT__ASSUME : bool;
+  FLT_LST__filter_in_ASSUME : bool;
+  MON_REQ__resp___EVENT__ASSUME : bool;
+  MON_REQ__resp_ASSUME : bool;
+  MON_REQ__reqt___EVENT__ASSUME : bool;
+  MON_REQ__reqt_ASSUME : bool;
+  FLT_ARes__filter_in___EVENT__ASSUME : bool;
+  FLT_ARes__filter_in_ASSUME : bool;
+  MON_GEO__keep_in_zones_ASSUME : bool;
+  MON_GEO__keep_out_zones_ASSUME : bool;
+  MON_GEO__observed___EVENT__ASSUME : bool;
+  MON_GEO__observed_ASSUME : bool;
+  __GUARANTEE0 : bool;
+  __GUARANTEE1 : bool;
+  __GUARANTEE2 : bool;
+  __GUARANTEE3 : bool;
+  __GUARANTEE4 : bool;
+let
+  --%MAIN;
+  __ASSUME0 = (radio_recv___EVENT_ => CASEAgree__WellformedCASE_RF_Msg(radio_recv, 500, 400));
+
+  __ASSUME1 = (uart_recv___EVENT_ => CASEAgree__WellformedCASE_UART_Msg(uart_recv));
+
+  __ASSUME__HIST = (MON_GEO____ASSUME__HIST and (FLT_ARes____ASSUME__HIST and (MON_REQ____ASSUME__HIST and (FLT_LST____ASSUME__HIST and (FLT_OR____ASSUME__HIST and (FLT_AReq____ASSUME__HIST and (AM_Gate____ASSUME__HIST and (AM____ASSUME__HIST and (WPM____ASSUME__HIST and (UXAS____ASSUME__HIST and (FlyZones____ASSUME__HIST and (RADIO____ASSUME__HIST and (FC_UART____ASSUME__HIST and true)))))))))))));
+
+  __LEMMA0 = ((UxasObeysKeepInZones and UxasObeysKeepOutZones) => UxasWellFormedAutomationResponse);
+
+  __GUARANTEE0 = (tick = 26) => (radio_send___EVENT_ => CASEAgree__WellformedCASE_RF_Msg(radio_send, 400, 500));
+
+  __GUARANTEE1 = (tick = 26) => (uart_send___EVENT_ => CASEAgree__WellformedCASE_UART_Msg(uart_send));
+
+  __GUARANTEE2 = (tick = 26) => trustedSourcesOnly;
+
+  __GUARANTEE3 = (tick = 26) => geoFenced;
+
+  __GUARANTEE4 = (tick = 26) => waypointsFromLineSearch;
+
+  assert __ASSUME0;
+
+  assert __ASSUME1;
+
+  assert (time = FC_UART__time);
+
+  assert condact(FC_UART_Complete, _TOP__FC_UART(FC_UART____ASSUME__HIST, FC_UART____ASSUME0, FC_UART____ASSUME1, FC_UART__recv_data___EVENT_, FC_UART__recv_data, FC_UART__MissionCommand___EVENT_, FC_UART__MissionCommand, FC_UART__time, FC_UART__send_data___EVENT_, FC_UART__send_data, FC_UART__AirVehicleState_WPM___EVENT_, FC_UART__AirVehicleState_WPM, FC_UART__AirVehicleState_UXAS___EVENT_, FC_UART__AirVehicleState_UXAS), true);
+  FC_UART__recv_data___EVENT__ASSUME = (__Between(FC_UART_Dispatch, FC_UART_Complete) => (true -> (FC_UART__recv_data___EVENT_ = pre(FC_UART__recv_data___EVENT_))));
+  FC_UART__recv_data_ASSUME = (__Between(FC_UART_Dispatch, FC_UART_Complete) => (true -> (FC_UART__recv_data = pre(FC_UART__recv_data))));
+  FC_UART__MissionCommand___EVENT__ASSUME = (__Between(FC_UART_Dispatch, FC_UART_Complete) => (true -> (FC_UART__MissionCommand___EVENT_ = pre(FC_UART__MissionCommand___EVENT_))));
+  FC_UART__MissionCommand_ASSUME = (__Between(FC_UART_Dispatch, FC_UART_Complete) => (true -> (FC_UART__MissionCommand = pre(FC_UART__MissionCommand))));
+  assert (not FC_UART_Complete) => (true -> (FC_UART__send_data = pre(FC_UART__send_data)));
+  assert (not FC_UART_Complete) => (true -> (FC_UART__AirVehicleState_WPM = pre(FC_UART__AirVehicleState_WPM)));
+  assert (not FC_UART_Complete) => (true -> (FC_UART__AirVehicleState_UXAS = pre(FC_UART__AirVehicleState_UXAS)));
+  assert (not FC_UART_Complete) => (FC_UART__send_data___EVENT_ = (false -> pre(FC_UART__send_data___EVENT_)));
+  assert (not FC_UART_Complete) => (FC_UART__AirVehicleState_WPM___EVENT_ = (false -> pre(FC_UART__AirVehicleState_WPM___EVENT_)));
+  assert (not FC_UART_Complete) => (FC_UART__AirVehicleState_UXAS___EVENT_ = (false -> pre(FC_UART__AirVehicleState_UXAS___EVENT_)));
+  assert (not FC_UART_Complete) => (FC_UART____ASSUME0 = (true -> pre(FC_UART____ASSUME0)));
+  assert (not FC_UART_Complete) => (FC_UART____ASSUME1 = (true -> pre(FC_UART____ASSUME1)));
+
+  assert (FC_UART____ASSUME__HIST = __HIST((FC_UART____ASSUME1 and FC_UART____ASSUME0)));
+
+  assert (time = RADIO__time);
+
+  assert condact(RADIO_Complete, _TOP__RADIO(RADIO____ASSUME__HIST, RADIO____ASSUME0, RADIO__am_request___EVENT_, RADIO__am_request, RADIO__recv_data___EVENT_, RADIO__recv_data, RADIO__time, RADIO__am_response___EVENT_, RADIO__am_response, RADIO__send_data___EVENT_, RADIO__send_data, RADIO__AutomationRequest___EVENT_, RADIO__AutomationRequest, RADIO__OperatingRegion___EVENT_, RADIO__OperatingRegion, RADIO__LineSearchTask___EVENT_, RADIO__LineSearchTask), true);
+  RADIO__am_request___EVENT__ASSUME = (__Between(RADIO_Dispatch, RADIO_Complete) => (true -> (RADIO__am_request___EVENT_ = pre(RADIO__am_request___EVENT_))));
+  RADIO__am_request_ASSUME = (__Between(RADIO_Dispatch, RADIO_Complete) => (true -> (RADIO__am_request = pre(RADIO__am_request))));
+  RADIO__recv_data___EVENT__ASSUME = (__Between(RADIO_Dispatch, RADIO_Complete) => (true -> (RADIO__recv_data___EVENT_ = pre(RADIO__recv_data___EVENT_))));
+  RADIO__recv_data_ASSUME = (__Between(RADIO_Dispatch, RADIO_Complete) => (true -> (RADIO__recv_data = pre(RADIO__recv_data))));
+  assert (not RADIO_Complete) => (true -> (RADIO__am_response = pre(RADIO__am_response)));
+  assert (not RADIO_Complete) => (true -> (RADIO__send_data = pre(RADIO__send_data)));
+  assert (not RADIO_Complete) => (true -> (RADIO__AutomationRequest = pre(RADIO__AutomationRequest)));
+  assert (not RADIO_Complete) => (true -> (RADIO__OperatingRegion = pre(RADIO__OperatingRegion)));
+  assert (not RADIO_Complete) => (true -> (RADIO__LineSearchTask = pre(RADIO__LineSearchTask)));
+  assert (not RADIO_Complete) => (RADIO__am_response___EVENT_ = (false -> pre(RADIO__am_response___EVENT_)));
+  assert (not RADIO_Complete) => (RADIO__send_data___EVENT_ = (false -> pre(RADIO__send_data___EVENT_)));
+  assert (not RADIO_Complete) => (RADIO__AutomationRequest___EVENT_ = (false -> pre(RADIO__AutomationRequest___EVENT_)));
+  assert (not RADIO_Complete) => (RADIO__OperatingRegion___EVENT_ = (false -> pre(RADIO__OperatingRegion___EVENT_)));
+  assert (not RADIO_Complete) => (RADIO__LineSearchTask___EVENT_ = (false -> pre(RADIO__LineSearchTask___EVENT_)));
+  assert (not RADIO_Complete) => (RADIO____ASSUME0 = (true -> pre(RADIO____ASSUME0)));
+
+  assert (RADIO____ASSUME__HIST = __HIST(RADIO____ASSUME0));
+
+  assert (time = FlyZones__time);
+
+  assert condact(FlyZones_Complete, _TOP__FlyZones(FlyZones____ASSUME__HIST, FlyZones__time, FlyZones__keep_in_zones, FlyZones__keep_out_zones), true);
+  assert (not FlyZones_Complete) => (true -> (FlyZones__keep_in_zones = pre(FlyZones__keep_in_zones)));
+  assert (not FlyZones_Complete) => (true -> (FlyZones__keep_out_zones = pre(FlyZones__keep_out_zones)));
+
+  assert (FlyZones____ASSUME__HIST = __HIST(true));
+
+  assert (time = UXAS__time);
+
+  assert condact(UXAS_Complete, _TOP__UXAS(UXAS____ASSUME__HIST, UXAS____ASSUME0, UXAS__AutomationRequest___EVENT_, UXAS__AutomationRequest, UXAS__AirVehicleState___EVENT_, UXAS__AirVehicleState, UXAS__OperatingRegion___EVENT_, UXAS__OperatingRegion, UXAS__LineSearchTask___EVENT_, UXAS__LineSearchTask, UXAS__time, UXAS__wellFormedAutomationRequest, UXAS__wellFormedLineSearchTask, UXAS__wellFormedOperatingRegion, UXAS__wellFormedAirVehicleState, UXAS__AutomationResponse___EVENT_, UXAS__AutomationResponse), true);
+  UXAS__AutomationRequest___EVENT__ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__AutomationRequest___EVENT_ = pre(UXAS__AutomationRequest___EVENT_))));
+  UXAS__AutomationRequest_ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__AutomationRequest = pre(UXAS__AutomationRequest))));
+  UXAS__AirVehicleState___EVENT__ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__AirVehicleState___EVENT_ = pre(UXAS__AirVehicleState___EVENT_))));
+  UXAS__AirVehicleState_ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__AirVehicleState = pre(UXAS__AirVehicleState))));
+  UXAS__OperatingRegion___EVENT__ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__OperatingRegion___EVENT_ = pre(UXAS__OperatingRegion___EVENT_))));
+  UXAS__OperatingRegion_ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__OperatingRegion = pre(UXAS__OperatingRegion))));
+  UXAS__LineSearchTask___EVENT__ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__LineSearchTask___EVENT_ = pre(UXAS__LineSearchTask___EVENT_))));
+  UXAS__LineSearchTask_ASSUME = (__Between(UXAS_Dispatch, UXAS_Complete) => (true -> (UXAS__LineSearchTask = pre(UXAS__LineSearchTask))));
+  assert (not UXAS_Complete) => (true -> (UXAS__wellFormedAutomationRequest = pre(UXAS__wellFormedAutomationRequest)));
+  assert (not UXAS_Complete) => (true -> (UXAS__wellFormedLineSearchTask = pre(UXAS__wellFormedLineSearchTask)));
+  assert (not UXAS_Complete) => (true -> (UXAS__wellFormedOperatingRegion = pre(UXAS__wellFormedOperatingRegion)));
+  assert (not UXAS_Complete) => (true -> (UXAS__wellFormedAirVehicleState = pre(UXAS__wellFormedAirVehicleState)));
+  assert (not UXAS_Complete) => (true -> (UXAS__AutomationResponse = pre(UXAS__AutomationResponse)));
+  assert (not UXAS_Complete) => (UXAS__AutomationResponse___EVENT_ = (false -> pre(UXAS__AutomationResponse___EVENT_)));
+  assert (not UXAS_Complete) => (UXAS____ASSUME0 = (true -> pre(UXAS____ASSUME0)));
+
+  assert (UXAS____ASSUME__HIST = __HIST(UXAS____ASSUME0));
+
+  assert (time = WPM__time);
+
+  assert condact(WPM_Complete, _TOP__WPM(WPM____ASSUME__HIST, WPM____ASSUME0, WPM____ASSUME1, WPM____ASSUME2, WPM__AutomationResponse___EVENT_, WPM__AutomationResponse, WPM__AirVehicleState___EVENT_, WPM__AirVehicleState, WPM__ReturnHome___EVENT_, WPM__time, WPM__MissionCommand___EVENT_, WPM__MissionCommand), true);
+  WPM__AutomationResponse___EVENT__ASSUME = (__Between(WPM_Dispatch, WPM_Complete) => (true -> (WPM__AutomationResponse___EVENT_ = pre(WPM__AutomationResponse___EVENT_))));
+  WPM__AutomationResponse_ASSUME = (__Between(WPM_Dispatch, WPM_Complete) => (true -> (WPM__AutomationResponse = pre(WPM__AutomationResponse))));
+  WPM__AirVehicleState___EVENT__ASSUME = (__Between(WPM_Dispatch, WPM_Complete) => (true -> (WPM__AirVehicleState___EVENT_ = pre(WPM__AirVehicleState___EVENT_))));
+  WPM__AirVehicleState_ASSUME = (__Between(WPM_Dispatch, WPM_Complete) => (true -> (WPM__AirVehicleState = pre(WPM__AirVehicleState))));
+  WPM__ReturnHome___EVENT__ASSUME = (__Between(WPM_Dispatch, WPM_Complete) => (true -> (WPM__ReturnHome___EVENT_ = pre(WPM__ReturnHome___EVENT_))));
+  assert (not WPM_Complete) => (true -> (WPM__MissionCommand = pre(WPM__MissionCommand)));
+  assert (not WPM_Complete) => (WPM__MissionCommand___EVENT_ = (false -> pre(WPM__MissionCommand___EVENT_)));
+  assert (not WPM_Complete) => (WPM____ASSUME0 = (true -> pre(WPM____ASSUME0)));
+  assert (not WPM_Complete) => (WPM____ASSUME1 = (true -> pre(WPM____ASSUME1)));
+  assert (not WPM_Complete) => (WPM____ASSUME2 = (true -> pre(WPM____ASSUME2)));
+
+  assert (WPM____ASSUME__HIST = __HIST((WPM____ASSUME2 and (WPM____ASSUME1 and WPM____ASSUME0))));
+
+  assert (time = AM__time);
+
+  assert condact(AM_Complete, _TOP__AM(AM____ASSUME__HIST, AM__attestation_response___EVENT_, AM__attestation_response, AM__time, AM__trusted_ids, AM__attestation_request___EVENT_, AM__attestation_request), true);
+  AM__attestation_response___EVENT__ASSUME = (__Between(AM_Dispatch, AM_Complete) => (true -> (AM__attestation_response___EVENT_ = pre(AM__attestation_response___EVENT_))));
+  AM__attestation_response_ASSUME = (__Between(AM_Dispatch, AM_Complete) => (true -> (AM__attestation_response = pre(AM__attestation_response))));
+  assert (not AM_Complete) => (true -> (AM__trusted_ids = pre(AM__trusted_ids)));
+  assert (not AM_Complete) => (true -> (AM__attestation_request = pre(AM__attestation_request)));
+  assert (not AM_Complete) => (AM__attestation_request___EVENT_ = (false -> pre(AM__attestation_request___EVENT_)));
+
+  assert (AM____ASSUME__HIST = __HIST(true));
+
+  assert (time = AM_Gate__time);
+
+  assert condact(AM_Gate_Complete, _TOP__AM_Gate(AM_Gate____ASSUME__HIST, AM_Gate__trusted_ids, AM_Gate__AutomationRequest_in___EVENT_, AM_Gate__AutomationRequest_in, AM_Gate__OperatingRegion_in___EVENT_, AM_Gate__OperatingRegion_in, AM_Gate__LineSearchTask_in___EVENT_, AM_Gate__LineSearchTask_in, AM_Gate__time, AM_Gate__AutomationRequest_out___EVENT_, AM_Gate__AutomationRequest_out, AM_Gate__OperatingRegion_out___EVENT_, AM_Gate__OperatingRegion_out, AM_Gate__LineSearchTask_out___EVENT_, AM_Gate__LineSearchTask_out), true);
+  AM_Gate__trusted_ids_ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__trusted_ids = pre(AM_Gate__trusted_ids))));
+  AM_Gate__AutomationRequest_in___EVENT__ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__AutomationRequest_in___EVENT_ = pre(AM_Gate__AutomationRequest_in___EVENT_))));
+  AM_Gate__AutomationRequest_in_ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__AutomationRequest_in = pre(AM_Gate__AutomationRequest_in))));
+  AM_Gate__OperatingRegion_in___EVENT__ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__OperatingRegion_in___EVENT_ = pre(AM_Gate__OperatingRegion_in___EVENT_))));
+  AM_Gate__OperatingRegion_in_ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__OperatingRegion_in = pre(AM_Gate__OperatingRegion_in))));
+  AM_Gate__LineSearchTask_in___EVENT__ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__LineSearchTask_in___EVENT_ = pre(AM_Gate__LineSearchTask_in___EVENT_))));
+  AM_Gate__LineSearchTask_in_ASSUME = (__Between(AM_Gate_Dispatch, AM_Gate_Complete) => (true -> (AM_Gate__LineSearchTask_in = pre(AM_Gate__LineSearchTask_in))));
+  assert (not AM_Gate_Complete) => (true -> (AM_Gate__AutomationRequest_out = pre(AM_Gate__AutomationRequest_out)));
+  assert (not AM_Gate_Complete) => (true -> (AM_Gate__OperatingRegion_out = pre(AM_Gate__OperatingRegion_out)));
+  assert (not AM_Gate_Complete) => (true -> (AM_Gate__LineSearchTask_out = pre(AM_Gate__LineSearchTask_out)));
+  assert (not AM_Gate_Complete) => (AM_Gate__AutomationRequest_out___EVENT_ = (false -> pre(AM_Gate__AutomationRequest_out___EVENT_)));
+  assert (not AM_Gate_Complete) => (AM_Gate__OperatingRegion_out___EVENT_ = (false -> pre(AM_Gate__OperatingRegion_out___EVENT_)));
+  assert (not AM_Gate_Complete) => (AM_Gate__LineSearchTask_out___EVENT_ = (false -> pre(AM_Gate__LineSearchTask_out___EVENT_)));
+
+  assert (AM_Gate____ASSUME__HIST = __HIST(true));
+
+  assert (time = FLT_AReq__time);
+
+  assert condact(FLT_AReq_Complete, _TOP__FLT_AReq(FLT_AReq____ASSUME__HIST, FLT_AReq__filter_in___EVENT_, FLT_AReq__filter_in, FLT_AReq__time, FLT_AReq__filter_out_UXAS___EVENT_, FLT_AReq__filter_out_UXAS, FLT_AReq__filter_out_MON_REQ___EVENT_, FLT_AReq__filter_out_MON_REQ), true);
+  FLT_AReq__filter_in___EVENT__ASSUME = (__Between(FLT_AReq_Dispatch, FLT_AReq_Complete) => (true -> (FLT_AReq__filter_in___EVENT_ = pre(FLT_AReq__filter_in___EVENT_))));
+  FLT_AReq__filter_in_ASSUME = (__Between(FLT_AReq_Dispatch, FLT_AReq_Complete) => (true -> (FLT_AReq__filter_in = pre(FLT_AReq__filter_in))));
+  assert (not FLT_AReq_Complete) => (true -> (FLT_AReq__filter_out_UXAS = pre(FLT_AReq__filter_out_UXAS)));
+  assert (not FLT_AReq_Complete) => (true -> (FLT_AReq__filter_out_MON_REQ = pre(FLT_AReq__filter_out_MON_REQ)));
+  assert (not FLT_AReq_Complete) => (FLT_AReq__filter_out_UXAS___EVENT_ = (false -> pre(FLT_AReq__filter_out_UXAS___EVENT_)));
+  assert (not FLT_AReq_Complete) => (FLT_AReq__filter_out_MON_REQ___EVENT_ = (false -> pre(FLT_AReq__filter_out_MON_REQ___EVENT_)));
+
+  assert (FLT_AReq____ASSUME__HIST = __HIST(true));
+
+  assert (time = FLT_OR__time);
+
+  assert condact(FLT_OR_Complete, _TOP__FLT_OR(FLT_OR____ASSUME__HIST, FLT_OR__filter_in___EVENT_, FLT_OR__filter_in, FLT_OR__time, FLT_OR__filter_out___EVENT_, FLT_OR__filter_out), true);
+  FLT_OR__filter_in___EVENT__ASSUME = (__Between(FLT_OR_Dispatch, FLT_OR_Complete) => (true -> (FLT_OR__filter_in___EVENT_ = pre(FLT_OR__filter_in___EVENT_))));
+  FLT_OR__filter_in_ASSUME = (__Between(FLT_OR_Dispatch, FLT_OR_Complete) => (true -> (FLT_OR__filter_in = pre(FLT_OR__filter_in))));
+  assert (not FLT_OR_Complete) => (true -> (FLT_OR__filter_out = pre(FLT_OR__filter_out)));
+  assert (not FLT_OR_Complete) => (FLT_OR__filter_out___EVENT_ = (false -> pre(FLT_OR__filter_out___EVENT_)));
+
+  assert (FLT_OR____ASSUME__HIST = __HIST(true));
+
+  assert (time = FLT_LST__time);
+
+  assert condact(FLT_LST_Complete, _TOP__FLT_LST(FLT_LST____ASSUME__HIST, FLT_LST__filter_in___EVENT_, FLT_LST__filter_in, FLT_LST__time, FLT_LST__filter_out___EVENT_, FLT_LST__filter_out), true);
+  FLT_LST__filter_in___EVENT__ASSUME = (__Between(FLT_LST_Dispatch, FLT_LST_Complete) => (true -> (FLT_LST__filter_in___EVENT_ = pre(FLT_LST__filter_in___EVENT_))));
+  FLT_LST__filter_in_ASSUME = (__Between(FLT_LST_Dispatch, FLT_LST_Complete) => (true -> (FLT_LST__filter_in = pre(FLT_LST__filter_in))));
+  assert (not FLT_LST_Complete) => (true -> (FLT_LST__filter_out = pre(FLT_LST__filter_out)));
+  assert (not FLT_LST_Complete) => (FLT_LST__filter_out___EVENT_ = (false -> pre(FLT_LST__filter_out___EVENT_)));
+
+  assert (FLT_LST____ASSUME__HIST = __HIST(true));
+
+  assert (time = MON_REQ__time);
+
+  assert condact(MON_REQ_Complete, _TOP__MON_REQ(MON_REQ____ASSUME__HIST, MON_REQ__resp___EVENT_, MON_REQ__resp, MON_REQ__reqt___EVENT_, MON_REQ__reqt, MON_REQ__time, MON_REQ__ticks, MON_REQ__Policy, MON_REQ__alert___EVENT_), true);
+  MON_REQ__resp___EVENT__ASSUME = (__Between(MON_REQ_Dispatch, MON_REQ_Complete) => (true -> (MON_REQ__resp___EVENT_ = pre(MON_REQ__resp___EVENT_))));
+  MON_REQ__resp_ASSUME = (__Between(MON_REQ_Dispatch, MON_REQ_Complete) => (true -> (MON_REQ__resp = pre(MON_REQ__resp))));
+  MON_REQ__reqt___EVENT__ASSUME = (__Between(MON_REQ_Dispatch, MON_REQ_Complete) => (true -> (MON_REQ__reqt___EVENT_ = pre(MON_REQ__reqt___EVENT_))));
+  MON_REQ__reqt_ASSUME = (__Between(MON_REQ_Dispatch, MON_REQ_Complete) => (true -> (MON_REQ__reqt = pre(MON_REQ__reqt))));
+  assert (not MON_REQ_Complete) => (true -> (MON_REQ__ticks = pre(MON_REQ__ticks)));
+  assert (not MON_REQ_Complete) => (true -> (MON_REQ__Policy = pre(MON_REQ__Policy)));
+  assert (not MON_REQ_Complete) => (MON_REQ__alert___EVENT_ = (false -> pre(MON_REQ__alert___EVENT_)));
+
+  assert (MON_REQ____ASSUME__HIST = __HIST(true));
+
+  assert (time = FLT_ARes__time);
+
+  assert condact(FLT_ARes_Complete, _TOP__FLT_ARes(FLT_ARes____ASSUME__HIST, FLT_ARes__filter_in___EVENT_, FLT_ARes__filter_in, FLT_ARes__time, FLT_ARes__filter_out___EVENT_, FLT_ARes__filter_out), true);
+  FLT_ARes__filter_in___EVENT__ASSUME = (__Between(FLT_ARes_Dispatch, FLT_ARes_Complete) => (true -> (FLT_ARes__filter_in___EVENT_ = pre(FLT_ARes__filter_in___EVENT_))));
+  FLT_ARes__filter_in_ASSUME = (__Between(FLT_ARes_Dispatch, FLT_ARes_Complete) => (true -> (FLT_ARes__filter_in = pre(FLT_ARes__filter_in))));
+  assert (not FLT_ARes_Complete) => (true -> (FLT_ARes__filter_out = pre(FLT_ARes__filter_out)));
+  assert (not FLT_ARes_Complete) => (FLT_ARes__filter_out___EVENT_ = (false -> pre(FLT_ARes__filter_out___EVENT_)));
+
+  assert (FLT_ARes____ASSUME__HIST = __HIST(true));
+
+  assert (time = MON_GEO__time);
+
+  assert condact(MON_GEO_Complete, _TOP__MON_GEO(MON_GEO____ASSUME__HIST, MON_GEO__keep_in_zones, MON_GEO__keep_out_zones, MON_GEO__observed___EVENT_, MON_GEO__observed, MON_GEO__time, MON_GEO__Policy, MON_GEO__output___EVENT_, MON_GEO__output, MON_GEO__alert___EVENT_), true);
+  MON_GEO__keep_in_zones_ASSUME = (__Between(MON_GEO_Dispatch, MON_GEO_Complete) => (true -> (MON_GEO__keep_in_zones = pre(MON_GEO__keep_in_zones))));
+  MON_GEO__keep_out_zones_ASSUME = (__Between(MON_GEO_Dispatch, MON_GEO_Complete) => (true -> (MON_GEO__keep_out_zones = pre(MON_GEO__keep_out_zones))));
+  MON_GEO__observed___EVENT__ASSUME = (__Between(MON_GEO_Dispatch, MON_GEO_Complete) => (true -> (MON_GEO__observed___EVENT_ = pre(MON_GEO__observed___EVENT_))));
+  MON_GEO__observed_ASSUME = (__Between(MON_GEO_Dispatch, MON_GEO_Complete) => (true -> (MON_GEO__observed = pre(MON_GEO__observed))));
+  assert (not MON_GEO_Complete) => (true -> (MON_GEO__Policy = pre(MON_GEO__Policy)));
+  assert (not MON_GEO_Complete) => (true -> (MON_GEO__output = pre(MON_GEO__output)));
+  assert (not MON_GEO_Complete) => (MON_GEO__output___EVENT_ = (false -> pre(MON_GEO__output___EVENT_)));
+  assert (not MON_GEO_Complete) => (MON_GEO__alert___EVENT_ = (false -> pre(MON_GEO__alert___EVENT_)));
+
+  assert (MON_GEO____ASSUME__HIST = __HIST(true));
+
+  assert (radio_recv = RADIO__recv_data);
+
+  assert (radio_recv___EVENT_ = RADIO__recv_data___EVENT_);
+
+  assert (uart_recv = FC_UART__recv_data);
+
+  assert (uart_recv___EVENT_ = FC_UART__recv_data___EVENT_);
+
+  assert (FC_UART__send_data = uart_send);
+
+  assert (FC_UART__send_data___EVENT_ = uart_send___EVENT_);
+
+  assert (FC_UART__AirVehicleState_WPM = WPM__AirVehicleState);
+
+  assert (FC_UART__AirVehicleState_WPM___EVENT_ = WPM__AirVehicleState___EVENT_);
+
+  assert (FC_UART__AirVehicleState_UXAS = UXAS__AirVehicleState);
+
+  assert (FC_UART__AirVehicleState_UXAS___EVENT_ = UXAS__AirVehicleState___EVENT_);
+
+  assert (RADIO__am_response = AM__attestation_response);
+
+  assert (RADIO__am_response___EVENT_ = AM__attestation_response___EVENT_);
+
+  assert (RADIO__send_data = radio_send);
+
+  assert (RADIO__send_data___EVENT_ = radio_send___EVENT_);
+
+  assert (RADIO__AutomationRequest = AM_Gate__AutomationRequest_in);
+
+  assert (RADIO__AutomationRequest___EVENT_ = AM_Gate__AutomationRequest_in___EVENT_);
+
+  assert (RADIO__OperatingRegion = AM_Gate__OperatingRegion_in);
+
+  assert (RADIO__OperatingRegion___EVENT_ = AM_Gate__OperatingRegion_in___EVENT_);
+
+  assert (RADIO__LineSearchTask = AM_Gate__LineSearchTask_in);
+
+  assert (RADIO__LineSearchTask___EVENT_ = AM_Gate__LineSearchTask_in___EVENT_);
+
+  assert (FlyZones__keep_in_zones = MON_GEO__keep_in_zones);
+
+  assert (FlyZones__keep_out_zones = MON_GEO__keep_out_zones);
+
+  assert (UXAS__AutomationResponse = FLT_ARes__filter_in);
+
+  assert (UXAS__AutomationResponse___EVENT_ = FLT_ARes__filter_in___EVENT_);
+
+  assert (WPM__MissionCommand = FC_UART__MissionCommand);
+
+  assert (WPM__MissionCommand___EVENT_ = FC_UART__MissionCommand___EVENT_);
+
+  assert (AM__trusted_ids = AM_Gate__trusted_ids);
+
+  assert (AM__attestation_request = RADIO__am_request);
+
+  assert (AM__attestation_request___EVENT_ = RADIO__am_request___EVENT_);
+
+  assert (AM_Gate__AutomationRequest_out = FLT_AReq__filter_in);
+
+  assert (AM_Gate__AutomationRequest_out___EVENT_ = FLT_AReq__filter_in___EVENT_);
+
+  assert (AM_Gate__OperatingRegion_out = FLT_OR__filter_in);
+
+  assert (AM_Gate__OperatingRegion_out___EVENT_ = FLT_OR__filter_in___EVENT_);
+
+  assert (AM_Gate__LineSearchTask_out = FLT_LST__filter_in);
+
+  assert (AM_Gate__LineSearchTask_out___EVENT_ = FLT_LST__filter_in___EVENT_);
+
+  assert (FLT_AReq__filter_out_UXAS = UXAS__AutomationRequest);
+
+  assert (FLT_AReq__filter_out_UXAS___EVENT_ = UXAS__AutomationRequest___EVENT_);
+
+  assert (FLT_AReq__filter_out_MON_REQ = MON_REQ__reqt);
+
+  assert (FLT_AReq__filter_out_MON_REQ___EVENT_ = MON_REQ__reqt___EVENT_);
+
+  assert (FLT_OR__filter_out = UXAS__OperatingRegion);
+
+  assert (FLT_OR__filter_out___EVENT_ = UXAS__OperatingRegion___EVENT_);
+
+  assert (FLT_LST__filter_out = UXAS__LineSearchTask);
+
+  assert (FLT_LST__filter_out___EVENT_ = UXAS__LineSearchTask___EVENT_);
+
+  assert (FLT_ARes__filter_out = MON_REQ__resp);
+
+  assert (FLT_ARes__filter_out___EVENT_ = MON_REQ__resp___EVENT_);
+
+  assert (FLT_ARes__filter_out = MON_GEO__observed);
+
+  assert (FLT_ARes__filter_out___EVENT_ = MON_GEO__observed___EVENT_);
+
+  assert (MON_GEO__output = WPM__AutomationResponse);
+
+  assert (MON_GEO__output___EVENT_ = WPM__AutomationResponse___EVENT_);
+
+  assert (MON_GEO__alert___EVENT_ = WPM__ReturnHome___EVENT_);
+
+  assert (trusted_ids = AM__trusted_ids);
+
+  assert (trustedAutomationRequest = (UXAS__AutomationRequest___EVENT_ => (CASEAgree__IS_TRUSTED(trusted_ids, RADIO__AutomationRequest.id) and (RADIO__AutomationRequest.payload.AutomationRequest = UXAS__AutomationRequest))));
+
+  assert (trustedLineSearchTask = (UXAS__LineSearchTask___EVENT_ => (CASEAgree__IS_TRUSTED(trusted_ids, RADIO__LineSearchTask.id) and (RADIO__LineSearchTask.payload.LineSearchTask = UXAS__LineSearchTask))));
+
+  assert (trustedOperatingRegion = (UXAS__OperatingRegion___EVENT_ => (CASEAgree__IS_TRUSTED(trusted_ids, RADIO__OperatingRegion.id) and (RADIO__OperatingRegion.payload.OperatingRegion = UXAS__OperatingRegion))));
+
+  assert (keep_in_zones = FlyZones__keep_in_zones);
+
+  assert (keep_out_zones = FlyZones__keep_out_zones);
+
+  assert (obeysKeepInZones = (WPM__AutomationResponse___EVENT_ => CASEAgree__WAYPOINTS_IN_ZONE(CASEAgree__GET_MISSION_COMMAND(WPM__AutomationResponse), keep_in_zones)));
+
+  assert (obeysKeepOutZones = (WPM__AutomationResponse___EVENT_ => CASEAgree__WAYPOINTS_NOT_IN_ZONE(CASEAgree__GET_MISSION_COMMAND(WPM__AutomationResponse), keep_out_zones)));
+
+  assert (noDuplicates = (WPM__AutomationResponse___EVENT_ => (not CASEAgree__DUPLICATES_IN_MISSION(CASEAgree__GET_MISSION_COMMAND(WPM__AutomationResponse)))));
+
+  assert (UxasObeysKeepInZones = (UXAS__AutomationResponse___EVENT_ => CASEAgree__WAYPOINTS_IN_ZONE(CASEAgree__GET_MISSION_COMMAND(UXAS__AutomationResponse), keep_in_zones)));
+
+  assert (UxasObeysKeepOutZones = (UXAS__AutomationResponse___EVENT_ => CASEAgree__WAYPOINTS_NOT_IN_ZONE(CASEAgree__GET_MISSION_COMMAND(UXAS__AutomationResponse), keep_out_zones)));
+
+  assert (UxasWellFormedAutomationResponse = (UXAS__AutomationResponse___EVENT_ => CASEAgree__WELL_FORMED_AUTOMATION_RESPONSE(UXAS__AutomationResponse)));
+
+  assert (trustedSourcesOnly = ((trustedAutomationRequest and trustedLineSearchTask) and trustedOperatingRegion));
+
+  assert (geoFenced = ((obeysKeepInZones and obeysKeepOutZones) and noDuplicates));
+
+  assert (waypointsFromLineSearch = (WPM__AutomationResponse___EVENT_ => CASEAgree__IS_SUBSET_OF_LOCATIONS(UXAS__LineSearchTask.PointList, WPM__AutomationResponse.MissionCommandList[0])));
+
+  __ASSUME999 = (RADIO_Dispatch = ((tick = 1))) and (RADIO_Complete = ((tick = 2))) and (AM_Dispatch = ((tick = 3))) and (AM_Complete = ((tick = 4))) and (AM_Gate_Dispatch = ((tick = 5))) and (AM_Gate_Complete = ((tick = 6))) and (FLT_AReq_Dispatch = ((tick = 7))) and (FLT_AReq_Complete = ((tick = 8))) and (FLT_LST_Dispatch = ((tick = 9))) and (FLT_LST_Complete = ((tick = 10))) and (FLT_OR_Dispatch = ((tick = 11))) and (FLT_OR_Complete = ((tick = 12))) and (UXAS_Dispatch = ((tick = 13))) and (UXAS_Complete = ((tick = 14))) and (FlyZones_Dispatch = ((tick = 15))) and (FlyZones_Complete = ((tick = 16))) and (MON_REQ_Dispatch = ((tick = 17))) and (MON_REQ_Complete = ((tick = 18))) and (FLT_ARes_Dispatch = ((tick = 19))) and (FLT_ARes_Complete = ((tick = 20))) and (MON_GEO_Dispatch = ((tick = 21))) and (MON_GEO_Complete = ((tick = 22))) and (WPM_Dispatch = ((tick = 23))) and (WPM_Complete = ((tick = 24))) and (FC_UART_Dispatch = ((tick = 25))) and (FC_UART_Complete = ((tick = 26)));
+  assert __ASSUME999;
+  assert (tick = __CircularCounter(1, 1, (false -> (pre(tick = 26)))));
+  assert (not (tick = 1)) => (true -> (radio_recv = pre(radio_recv)));
+  assert (not (tick = 1)) => (true -> (uart_recv = pre(uart_recv)));
+  assert (not (tick = 1)) => (radio_recv___EVENT_ = (false -> pre(radio_recv___EVENT_)));
+  assert (not (tick = 1)) => (uart_recv___EVENT_ = (false -> pre(uart_recv___EVENT_)));
+  assert true;
+
+  assert (((time = 0.0) -> (time > (pre time))) and (true -> (time = ((pre time) + (time - (pre time))))));
+
+  --%PROPERTY FC_UART____ASSUME0;
+  --%PROPERTY FC_UART____ASSUME1;
+  --%PROPERTY RADIO____ASSUME0;
+  --%PROPERTY UXAS____ASSUME0;
+  --%PROPERTY WPM____ASSUME0;
+  --%PROPERTY WPM____ASSUME1;
+  --%PROPERTY WPM____ASSUME2;
+  --%PROPERTY __ASSUME__HIST;
+  --%PROPERTY FC_UART__recv_data___EVENT__ASSUME;
+  --%PROPERTY FC_UART__recv_data_ASSUME;
+  --%PROPERTY FC_UART__MissionCommand___EVENT__ASSUME;
+  --%PROPERTY FC_UART__MissionCommand_ASSUME;
+  --%PROPERTY RADIO__am_request___EVENT__ASSUME;
+  --%PROPERTY RADIO__am_request_ASSUME;
+  --%PROPERTY RADIO__recv_data___EVENT__ASSUME;
+  --%PROPERTY RADIO__recv_data_ASSUME;
+  --%PROPERTY UXAS__AutomationRequest___EVENT__ASSUME;
+  --%PROPERTY UXAS__AutomationRequest_ASSUME;
+  --%PROPERTY UXAS__AirVehicleState___EVENT__ASSUME;
+  --%PROPERTY UXAS__AirVehicleState_ASSUME;
+  --%PROPERTY UXAS__OperatingRegion___EVENT__ASSUME;
+  --%PROPERTY UXAS__OperatingRegion_ASSUME;
+  --%PROPERTY UXAS__LineSearchTask___EVENT__ASSUME;
+  --%PROPERTY UXAS__LineSearchTask_ASSUME;
+  --%PROPERTY WPM__AutomationResponse___EVENT__ASSUME;
+  --%PROPERTY WPM__AutomationResponse_ASSUME;
+  --%PROPERTY WPM__AirVehicleState___EVENT__ASSUME;
+  --%PROPERTY WPM__AirVehicleState_ASSUME;
+  --%PROPERTY WPM__ReturnHome___EVENT__ASSUME;
+  --%PROPERTY AM__attestation_response___EVENT__ASSUME;
+  --%PROPERTY AM__attestation_response_ASSUME;
+  --%PROPERTY AM_Gate__trusted_ids_ASSUME;
+  --%PROPERTY AM_Gate__AutomationRequest_in___EVENT__ASSUME;
+  --%PROPERTY AM_Gate__AutomationRequest_in_ASSUME;
+  --%PROPERTY AM_Gate__OperatingRegion_in___EVENT__ASSUME;
+  --%PROPERTY AM_Gate__OperatingRegion_in_ASSUME;
+  --%PROPERTY AM_Gate__LineSearchTask_in___EVENT__ASSUME;
+  --%PROPERTY AM_Gate__LineSearchTask_in_ASSUME;
+  --%PROPERTY FLT_AReq__filter_in___EVENT__ASSUME;
+  --%PROPERTY FLT_AReq__filter_in_ASSUME;
+  --%PROPERTY FLT_OR__filter_in___EVENT__ASSUME;
+  --%PROPERTY FLT_OR__filter_in_ASSUME;
+  --%PROPERTY FLT_LST__filter_in___EVENT__ASSUME;
+  --%PROPERTY FLT_LST__filter_in_ASSUME;
+  --%PROPERTY MON_REQ__resp___EVENT__ASSUME;
+  --%PROPERTY MON_REQ__resp_ASSUME;
+  --%PROPERTY MON_REQ__reqt___EVENT__ASSUME;
+  --%PROPERTY MON_REQ__reqt_ASSUME;
+  --%PROPERTY FLT_ARes__filter_in___EVENT__ASSUME;
+  --%PROPERTY FLT_ARes__filter_in_ASSUME;
+  --%PROPERTY MON_GEO__keep_in_zones_ASSUME;
+  --%PROPERTY MON_GEO__keep_out_zones_ASSUME;
+  --%PROPERTY MON_GEO__observed___EVENT__ASSUME;
+  --%PROPERTY MON_GEO__observed_ASSUME;
+  --%PROPERTY __GUARANTEE0;
+  --%PROPERTY __GUARANTEE1;
+  --%PROPERTY __GUARANTEE2;
+  --%PROPERTY __GUARANTEE3;
+
+  --%IVC __ASSUME0, __ASSUME1;
+
+tel;
+
+node CASEAgree__WellformedCASE_UART_Msg(
+  msg : CASE_Model_Transformations__CASE_UART_Msg__Impl
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (msg.crc = true);
+
+tel;
+
+node _CLOCKED_CASEAgree__WellformedCASE_UART_Msg(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CASE_Model_Transformations__CASE_UART_Msg__Impl
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (msg.crc = true) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_WAYPOINT(
+  point : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((((point.Latitude >= (-90.0)) and (point.Latitude <= 90.0)) and (point.Longitude >= (-180.0))) and (point.Longitude <= 180.0)) and (point.Altitude >= 0.0)) and (point.Altitude <= 15000.0));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(
+  _CLK : bool;
+  _INIT : bool;
+  point : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((((point.Latitude >= (-90.0)) and (point.Latitude <= 90.0)) and (point.Longitude >= (-180.0))) and (point.Longitude <= 180.0)) and (point.Altitude >= 0.0)) and (point.Altitude <= 15000.0)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_MISSION_COMMAND(
+  msg : CMASI__MissionCommand__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((CASEAgree__WELL_FORMED_WAYPOINT(msg.WaypointList[0]) and CASEAgree__WELL_FORMED_WAYPOINT(msg.WaypointList[1])) and CASEAgree__WELL_FORMED_WAYPOINT(msg.WaypointList[2])) and (msg.FirstWaypoint > 0)) and (msg.FirstWaypoint <= 200));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_MISSION_COMMAND(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CMASI__MissionCommand__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((_CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(_CLK, _INIT, msg.WaypointList[0]) and _CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(_CLK, _INIT, msg.WaypointList[1])) and _CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(_CLK, _INIT, msg.WaypointList[2])) and (msg.FirstWaypoint > 0)) and (msg.FirstWaypoint <= 200)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_AIR_VEHICLE_STATE(
+  msg : CMASI__AirVehicleState__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = true;
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_AIR_VEHICLE_STATE(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CMASI__AirVehicleState__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then true else (pre _outvar));
+
+tel;
+
+node CASEAgree__WellformedCASE_MsgHeader(
+  hdr : CASE_Model_Transformations__CASE_MsgHeader__Impl;
+  src : int;
+  dst : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((hdr.src = src) and (hdr.dst = dst)) and (hdr.trusted = true)) and (hdr.HMAC = true));
+
+tel;
+
+node _CLOCKED_CASEAgree__WellformedCASE_MsgHeader(
+  _CLK : bool;
+  _INIT : bool;
+  hdr : CASE_Model_Transformations__CASE_MsgHeader__Impl;
+  src : int;
+  dst : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((hdr.src = src) and (hdr.dst = dst)) and (hdr.trusted = true)) and (hdr.HMAC = true)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WellformedCASE_RF_Msg(
+  msg : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  src : int;
+  dst : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = CASEAgree__WellformedCASE_MsgHeader(msg.header, src, dst);
+
+tel;
+
+node _CLOCKED_CASEAgree__WellformedCASE_RF_Msg(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CASE_Model_Transformations__CASE_RF_Msg__Impl;
+  src : int;
+  dst : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then _CLOCKED_CASEAgree__WellformedCASE_MsgHeader(_CLK, _INIT, msg.header, src, dst) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_POINT(
+  point : CMASI__Location3D__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((((point.Latitude >= (-90.0)) and (point.Latitude <= 90.0)) and (point.Longitude >= (-180.0))) and (point.Longitude <= 180.0)) and (point.Altitude >= 0.0)) and (point.Altitude <= 15000.0));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_POINT(
+  _CLK : bool;
+  _INIT : bool;
+  point : CMASI__Location3D__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((((point.Latitude >= (-90.0)) and (point.Latitude <= 90.0)) and (point.Longitude >= (-180.0))) and (point.Longitude <= 180.0)) and (point.Altitude >= 0.0)) and (point.Altitude <= 15000.0)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_ZONES(
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (CASEAgree__WELL_FORMED_POINT(zone.BoundaryPointsList[0]) and CASEAgree__WELL_FORMED_POINT(zone.BoundaryPointsList[1]));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_ZONES(
+  _CLK : bool;
+  _INIT : bool;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (_CLOCKED_CASEAgree__WELL_FORMED_POINT(_CLK, _INIT, zone.BoundaryPointsList[0]) and _CLOCKED_CASEAgree__WELL_FORMED_POINT(_CLK, _INIT, zone.BoundaryPointsList[1])) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_AUTOMATION_REQUEST(
+  msg : CMASI__AutomationRequest__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (((((msg.EntityList[0] >= 0) and (msg.EntityList[0] <= 500)) and ((msg.TaskList[0] >= 0) and (msg.TaskList[0] <= 2000))) and (msg.OperatingRegion >= 0)) and (msg.OperatingRegion <= 500));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_AUTOMATION_REQUEST(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CMASI__AutomationRequest__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (((((msg.EntityList[0] >= 0) and (msg.EntityList[0] <= 500)) and ((msg.TaskList[0] >= 0) and (msg.TaskList[0] <= 2000))) and (msg.OperatingRegion >= 0)) and (msg.OperatingRegion <= 500)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_VIEWANGLE(
+  viewangle : CMASI__Wedge__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((viewangle.AzimuthCenterline >= (-180.0)) and (viewangle.AzimuthCenterline <= 180.0)) and (viewangle.VerticalCenterline >= (-180.0))) and (viewangle.VerticalCenterline <= 180.0));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(
+  _CLK : bool;
+  _INIT : bool;
+  viewangle : CMASI__Wedge__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((viewangle.AzimuthCenterline >= (-180.0)) and (viewangle.AzimuthCenterline <= 180.0)) and (viewangle.VerticalCenterline >= (-180.0))) and (viewangle.VerticalCenterline <= 180.0)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_LINE_SEARCH_TASK(
+  msg : CMASI__LineSearchTask__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((msg.TaskID >= 0) and (msg.TaskID <= 2000)) and ((CASEAgree__WELL_FORMED_POINT(msg.PointList[0]) and CASEAgree__WELL_FORMED_POINT(msg.PointList[1])) and CASEAgree__WELL_FORMED_POINT(msg.PointList[2]))) and (((((((((((((((CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[0]) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[1])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[2])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[3])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[4])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[5])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[6])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[7])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[8])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[9])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[10])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[11])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[12])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[13])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[14])) and CASEAgree__WELL_FORMED_VIEWANGLE(msg.ViewAngleList[15])));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_LINE_SEARCH_TASK(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CMASI__LineSearchTask__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((msg.TaskID >= 0) and (msg.TaskID <= 2000)) and ((_CLOCKED_CASEAgree__WELL_FORMED_POINT(_CLK, _INIT, msg.PointList[0]) and _CLOCKED_CASEAgree__WELL_FORMED_POINT(_CLK, _INIT, msg.PointList[1])) and _CLOCKED_CASEAgree__WELL_FORMED_POINT(_CLK, _INIT, msg.PointList[2]))) and (((((((((((((((_CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[0]) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[1])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[2])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[3])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[4])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[5])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[6])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[7])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[8])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[9])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[10])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[11])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[12])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[13])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[14])) and _CLOCKED_CASEAgree__WELL_FORMED_VIEWANGLE(_CLK, _INIT, msg.ViewAngleList[15]))) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_OPERATING_REGION(
+  msg : CMASI__OperatingRegion__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((msg.ID >= 0) and (msg.ID <= 500)) and ((msg.KeepInAreas[0] >= 0) and (msg.KeepInAreas[0] <= 500))) and ((msg.KeepOutAreas[0] >= 0) and (msg.KeepOutAreas[0] <= 500)));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_OPERATING_REGION(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CMASI__OperatingRegion__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((msg.ID >= 0) and (msg.ID <= 500)) and ((msg.KeepInAreas[0] >= 0) and (msg.KeepInAreas[0] <= 500))) and ((msg.KeepOutAreas[0] >= 0) and (msg.KeepOutAreas[0] <= 500))) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WELL_FORMED_AUTOMATION_RESPONSE(
+  msg : CMASI__AutomationResponse__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((CASEAgree__WELL_FORMED_WAYPOINT(msg.MissionCommandList[0].WaypointList[0]) and CASEAgree__WELL_FORMED_WAYPOINT(msg.MissionCommandList[0].WaypointList[1])) and CASEAgree__WELL_FORMED_WAYPOINT(msg.MissionCommandList[0].WaypointList[2]));
+
+tel;
+
+node _CLOCKED_CASEAgree__WELL_FORMED_AUTOMATION_RESPONSE(
+  _CLK : bool;
+  _INIT : bool;
+  msg : CMASI__AutomationResponse__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((_CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(_CLK, _INIT, msg.MissionCommandList[0].WaypointList[0]) and _CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(_CLK, _INIT, msg.MissionCommandList[0].WaypointList[1])) and _CLOCKED_CASEAgree__WELL_FORMED_WAYPOINT(_CLK, _INIT, msg.MissionCommandList[0].WaypointList[2])) else (pre _outvar));
+
+tel;
+
+node CASEAgree__IS_EQUAL(
+  lop : CMASI__Address__i;
+  rop : CMASI__Address__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((lop.value[([1, 2, 3, 4][0] - 1)] = rop.value[([1, 2, 3, 4][0] - 1)]) and (lop.value[([1, 2, 3, 4][1] - 1)] = rop.value[([1, 2, 3, 4][1] - 1)])) and (lop.value[([1, 2, 3, 4][2] - 1)] = rop.value[([1, 2, 3, 4][2] - 1)])) and (lop.value[([1, 2, 3, 4][3] - 1)] = rop.value[([1, 2, 3, 4][3] - 1)]));
+
+tel;
+
+node _CLOCKED_CASEAgree__IS_EQUAL(
+  _CLK : bool;
+  _INIT : bool;
+  lop : CMASI__Address__i;
+  rop : CMASI__Address__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((lop.value[([1, 2, 3, 4][0] - 1)] = rop.value[([1, 2, 3, 4][0] - 1)]) and (lop.value[([1, 2, 3, 4][1] - 1)] = rop.value[([1, 2, 3, 4][1] - 1)])) and (lop.value[([1, 2, 3, 4][2] - 1)] = rop.value[([1, 2, 3, 4][2] - 1)])) and (lop.value[([1, 2, 3, 4][3] - 1)] = rop.value[([1, 2, 3, 4][3] - 1)])) else (pre _outvar));
+
+tel;
+
+node CASEAgree__IS_TRUSTED(
+  ids : CMASI__AddressArray__i;
+  srcid : CMASI__Address__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((CASEAgree__IS_EQUAL(srcid, ids.value[0]) or CASEAgree__IS_EQUAL(srcid, ids.value[1])) or CASEAgree__IS_EQUAL(srcid, ids.value[2]));
+
+tel;
+
+node _CLOCKED_CASEAgree__IS_TRUSTED(
+  _CLK : bool;
+  _INIT : bool;
+  ids : CMASI__AddressArray__i;
+  srcid : CMASI__Address__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((_CLOCKED_CASEAgree__IS_EQUAL(_CLK, _INIT, srcid, ids.value[0]) or _CLOCKED_CASEAgree__IS_EQUAL(_CLK, _INIT, srcid, ids.value[1])) or _CLOCKED_CASEAgree__IS_EQUAL(_CLK, _INIT, srcid, ids.value[2])) else (pre _outvar));
+
+tel;
+
+node AGREE_PLTL__Once(
+  i : bool
+) returns (
+  o : bool
+);
+let
+  o = (i or (false -> (pre o)));
+
+tel;
+
+node _CLOCKED_AGREE_PLTL__Once(
+  _CLK : bool;
+  _INIT : bool;
+  i : bool
+) returns (
+  o : bool
+);
+var
+  _STATE0 : bool;
+let
+  o = (if _CLK then (i or (if _INIT then false else _STATE0)) else (pre o));
+
+  _STATE0 = (if _CLK then (pre o) else (pre _STATE0));
+
+tel;
+
+node SW__CASE_Monitor_Req_thr__Inc(
+  x : int
+) returns (
+  _outvar : int
+);
+let
+  _outvar = (if (x < 10) then (x + 1) else (10 + 1));
+
+tel;
+
+node _CLOCKED_SW__CASE_Monitor_Req_thr__Inc(
+  _CLK : bool;
+  _INIT : bool;
+  x : int
+) returns (
+  _outvar : int
+);
+let
+  _outvar = (if _CLK then (if (x < 10) then (x + 1) else (10 + 1)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(
+  waypoint : CMASI__Waypoint__i;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((((waypoint.Latitude >= zone.BoundaryPointsList[0].Latitude) and (waypoint.Latitude <= zone.BoundaryPointsList[1].Latitude)) and (waypoint.Longitude >= zone.BoundaryPointsList[0].Longitude)) and (waypoint.Longitude <= zone.BoundaryPointsList[1].Longitude)) and (waypoint.Altitude >= zone.BoundaryPointsList[0].Altitude)) and (waypoint.Altitude <= zone.BoundaryPointsList[1].Altitude));
+
+tel;
+
+node _CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(
+  _CLK : bool;
+  _INIT : bool;
+  waypoint : CMASI__Waypoint__i;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((((waypoint.Latitude >= zone.BoundaryPointsList[0].Latitude) and (waypoint.Latitude <= zone.BoundaryPointsList[1].Latitude)) and (waypoint.Longitude >= zone.BoundaryPointsList[0].Longitude)) and (waypoint.Longitude <= zone.BoundaryPointsList[1].Longitude)) and (waypoint.Altitude >= zone.BoundaryPointsList[0].Altitude)) and (waypoint.Altitude <= zone.BoundaryPointsList[1].Altitude)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__WAYPOINTS_IN_ZONE(
+  mission : CMASI__MissionCommand__i;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(mission.WaypointList[0], zone) and CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(mission.WaypointList[1], zone)) and CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(mission.WaypointList[2], zone));
+
+tel;
+
+node _CLOCKED_CASEAgree__WAYPOINTS_IN_ZONE(
+  _CLK : bool;
+  _INIT : bool;
+  mission : CMASI__MissionCommand__i;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((_CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(_CLK, _INIT, mission.WaypointList[0], zone) and _CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(_CLK, _INIT, mission.WaypointList[1], zone)) and _CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(_CLK, _INIT, mission.WaypointList[2], zone)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__GET_MISSION_COMMAND(
+  automationResponse : CMASI__AutomationResponse__i
+) returns (
+  _outvar : CMASI__MissionCommand__i
+);
+let
+  _outvar = automationResponse.MissionCommandList[0];
+
+tel;
+
+node _CLOCKED_CASEAgree__GET_MISSION_COMMAND(
+  _CLK : bool;
+  _INIT : bool;
+  automationResponse : CMASI__AutomationResponse__i
+) returns (
+  _outvar : CMASI__MissionCommand__i
+);
+let
+  _outvar = (if _CLK then automationResponse.MissionCommandList[0] else (pre _outvar));
+
+tel;
+
+node CASEAgree__WAYPOINTS_NOT_IN_ZONE(
+  mission : CMASI__MissionCommand__i;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (((not CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(mission.WaypointList[0], zone)) and (not CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(mission.WaypointList[1], zone))) and (not CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(mission.WaypointList[2], zone)));
+
+tel;
+
+node _CLOCKED_CASEAgree__WAYPOINTS_NOT_IN_ZONE(
+  _CLK : bool;
+  _INIT : bool;
+  mission : CMASI__MissionCommand__i;
+  zone : CMASI__Polygon__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (((not _CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(_CLK, _INIT, mission.WaypointList[0], zone)) and (not _CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(_CLK, _INIT, mission.WaypointList[1], zone))) and (not _CLOCKED_CASEAgree__WAYPOINT_IN_ZONE_RECTANGLE(_CLK, _INIT, mission.WaypointList[2], zone))) else (pre _outvar));
+
+tel;
+
+node CASEAgree__IS_LAST_WAYPOINT(
+  waypoint : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (waypoint.Number = waypoint.NextWaypoint);
+
+tel;
+
+node _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(
+  _CLK : bool;
+  _INIT : bool;
+  waypoint : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (waypoint.Number = waypoint.NextWaypoint) else (pre _outvar));
+
+tel;
+
+node CASEAgree__IS_DUPLICATE(
+  mission : CMASI__MissionCommand__i;
+  waypoint : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (((((((not CASEAgree__IS_LAST_WAYPOINT(mission.WaypointList[0])) and (mission.WaypointList[0].Number = waypoint.NextWaypoint)) and (mission.WaypointList[0].Latitude = waypoint.Latitude)) and (mission.WaypointList[0].Longitude = waypoint.Longitude)) and (mission.WaypointList[0].Altitude = waypoint.Altitude)) or (((((not CASEAgree__IS_LAST_WAYPOINT(mission.WaypointList[1])) and (mission.WaypointList[1].Number = waypoint.NextWaypoint)) and (mission.WaypointList[1].Latitude = waypoint.Latitude)) and (mission.WaypointList[1].Longitude = waypoint.Longitude)) and (mission.WaypointList[1].Altitude = waypoint.Altitude))) or (((((not CASEAgree__IS_LAST_WAYPOINT(mission.WaypointList[2])) and (mission.WaypointList[2].Number = waypoint.NextWaypoint)) and (mission.WaypointList[2].Latitude = waypoint.Latitude)) and (mission.WaypointList[2].Longitude = waypoint.Longitude)) and (mission.WaypointList[2].Altitude = waypoint.Altitude)));
+
+tel;
+
+node _CLOCKED_CASEAgree__IS_DUPLICATE(
+  _CLK : bool;
+  _INIT : bool;
+  mission : CMASI__MissionCommand__i;
+  waypoint : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (((((((not _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(_CLK, _INIT, mission.WaypointList[0])) and (mission.WaypointList[0].Number = waypoint.NextWaypoint)) and (mission.WaypointList[0].Latitude = waypoint.Latitude)) and (mission.WaypointList[0].Longitude = waypoint.Longitude)) and (mission.WaypointList[0].Altitude = waypoint.Altitude)) or (((((not _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(_CLK, _INIT, mission.WaypointList[1])) and (mission.WaypointList[1].Number = waypoint.NextWaypoint)) and (mission.WaypointList[1].Latitude = waypoint.Latitude)) and (mission.WaypointList[1].Longitude = waypoint.Longitude)) and (mission.WaypointList[1].Altitude = waypoint.Altitude))) or (((((not _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(_CLK, _INIT, mission.WaypointList[2])) and (mission.WaypointList[2].Number = waypoint.NextWaypoint)) and (mission.WaypointList[2].Latitude = waypoint.Latitude)) and (mission.WaypointList[2].Longitude = waypoint.Longitude)) and (mission.WaypointList[2].Altitude = waypoint.Altitude))) else (pre _outvar));
+
+tel;
+
+node CASEAgree__DUPLICATES_IN_MISSION(
+  mission : CMASI__MissionCommand__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((not CASEAgree__IS_LAST_WAYPOINT(mission.WaypointList[0])) and CASEAgree__IS_DUPLICATE(mission, mission.WaypointList[0])) or ((not CASEAgree__IS_LAST_WAYPOINT(mission.WaypointList[1])) and CASEAgree__IS_DUPLICATE(mission, mission.WaypointList[1]))) or ((not CASEAgree__IS_LAST_WAYPOINT(mission.WaypointList[2])) and CASEAgree__IS_DUPLICATE(mission, mission.WaypointList[2])));
+
+tel;
+
+node _CLOCKED_CASEAgree__DUPLICATES_IN_MISSION(
+  _CLK : bool;
+  _INIT : bool;
+  mission : CMASI__MissionCommand__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((not _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(_CLK, _INIT, mission.WaypointList[0])) and _CLOCKED_CASEAgree__IS_DUPLICATE(_CLK, _INIT, mission, mission.WaypointList[0])) or ((not _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(_CLK, _INIT, mission.WaypointList[1])) and _CLOCKED_CASEAgree__IS_DUPLICATE(_CLK, _INIT, mission, mission.WaypointList[1]))) or ((not _CLOCKED_CASEAgree__IS_LAST_WAYPOINT(_CLK, _INIT, mission.WaypointList[2])) and _CLOCKED_CASEAgree__IS_DUPLICATE(_CLK, _INIT, mission, mission.WaypointList[2]))) else (pre _outvar));
+
+tel;
+
+node CASEAgree__IS_EQUAL_LOCATION(
+  lop : CMASI__Location3D__i;
+  rop : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (((lop.Latitude = rop.Latitude) and (lop.Longitude = rop.Longitude)) and (lop.Altitude = rop.Altitude));
+
+tel;
+
+node _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(
+  _CLK : bool;
+  _INIT : bool;
+  lop : CMASI__Location3D__i;
+  rop : CMASI__Waypoint__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (((lop.Latitude = rop.Latitude) and (lop.Longitude = rop.Longitude)) and (lop.Altitude = rop.Altitude)) else (pre _outvar));
+
+tel;
+
+node CASEAgree__IS_SUBSET_OF_LOCATIONS(
+  lop : CMASI__Location3D__i[3];
+  rop : CMASI__MissionCommand__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((((CASEAgree__IS_EQUAL_LOCATION(lop[0], rop.WaypointList[0]) or CASEAgree__IS_EQUAL_LOCATION(lop[0], rop.WaypointList[1])) or CASEAgree__IS_EQUAL_LOCATION(lop[0], rop.WaypointList[2])) and ((CASEAgree__IS_EQUAL_LOCATION(lop[1], rop.WaypointList[0]) or CASEAgree__IS_EQUAL_LOCATION(lop[1], rop.WaypointList[1])) or CASEAgree__IS_EQUAL_LOCATION(lop[1], rop.WaypointList[2]))) and ((CASEAgree__IS_EQUAL_LOCATION(lop[2], rop.WaypointList[0]) or CASEAgree__IS_EQUAL_LOCATION(lop[2], rop.WaypointList[1])) or CASEAgree__IS_EQUAL_LOCATION(lop[2], rop.WaypointList[2])));
+
+tel;
+
+node _CLOCKED_CASEAgree__IS_SUBSET_OF_LOCATIONS(
+  _CLK : bool;
+  _INIT : bool;
+  lop : CMASI__Location3D__i[3];
+  rop : CMASI__MissionCommand__i
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then ((((_CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[0], rop.WaypointList[0]) or _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[0], rop.WaypointList[1])) or _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[0], rop.WaypointList[2])) and ((_CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[1], rop.WaypointList[0]) or _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[1], rop.WaypointList[1])) or _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[1], rop.WaypointList[2]))) and ((_CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[2], rop.WaypointList[0]) or _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[2], rop.WaypointList[1])) or _CLOCKED_CASEAgree__IS_EQUAL_LOCATION(_CLK, _INIT, lop[2], rop.WaypointList[2]))) else (pre _outvar));
+
+tel;
+
+node __HIST(
+  input : bool
+) returns (
+  hist : bool
+);
+let
+  hist = (input -> ((pre hist) and input));
+
+tel;
+
+node __MinPos(
+  a : real;
+  b : real
+) returns (
+  ret : real
+);
+let
+  ret = (if (a <= 0.0) then b else (if (b <= 0.0) then a else (if (a <= b) then a else b)));
+
+tel;
+
+node __Rise(
+  input : bool
+) returns (
+  output : bool
+);
+let
+  output = (input -> ((pre (not input)) and input));
+
+tel;
+
+node __Fall(
+  input : bool
+) returns (
+  output : bool
+);
+let
+  output = ((not input) -> ((pre input) and (not input)));
+
+tel;
+
+node __CircularCounter(
+  init : int;
+  incr : int;
+  reset : bool
+) returns (
+  count : int
+);
+let
+  count = (if reset then init else (init -> ((pre count) + incr)));
+tel;
+node __Between(
+  start : bool;
+  end : bool
+) returns (
+  out : bool
+);
+let
+  out = (if (false -> (pre start)) then true else (if (false -> (pre end)) then false else (false -> (pre out))));
+tel;

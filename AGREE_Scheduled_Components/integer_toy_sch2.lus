@@ -1,0 +1,277 @@
+-- AUTO GENERATED 
+type Base_Types__Boolean = bool;
+type Base_Types__Unsigned = int;
+type Base_Types__Unsigned_64 = int;
+type Base_Types__Unsigned_32 = int;
+type Base_Types__Unsigned_16 = int;
+type Base_Types__Unsigned_8 = int;
+type Base_Types__Integer = int;
+type Base_Types__Integer_64 = int;
+type Base_Types__Integer_32 = int;
+type Base_Types__Integer_16 = int;
+type Base_Types__Integer_8 = int;
+type Base_Types__Float = real;
+type Base_Types__Float_32 = real;
+type Base_Types__Float_64 = real;
+
+node _TOP__A_sub(
+  __ASSUME__HIST : bool;
+  __ASSUME0 : bool;
+  Input : int;
+  time : real;
+  Output : int
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (Output < (2 * Input));
+
+  __ASSERT = ((__ASSUME__HIST => __GUARANTEE0) and (__ASSUME0 = (Input < 20)));
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__B_sub(
+  __ASSUME__HIST : bool;
+  __ASSUME0 : bool;
+  Input : int;
+  time : real;
+  Output : int
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+let
+  __GUARANTEE0 = (Output < (Input + 15));
+
+  __ASSERT = ((__ASSUME__HIST => __GUARANTEE0) and (__ASSUME0 = (Input < 20)));
+
+  --%IVC __GUARANTEE0;
+
+tel;
+
+node _TOP__C_sub(
+  __ASSUME__HIST : bool;
+  Input1 : int;
+  Input2 : int;
+  time : real;
+  mode : int;
+  Output : int
+) returns (
+  __ASSERT : bool
+);
+var
+  __GUARANTEE0 : bool;
+  __GUARANTEE1 : bool;
+let
+  __GUARANTEE0 = ((mode >= 0) -> (mode > (pre mode)));
+
+  __GUARANTEE1 = (Output = (if (mode = 3) then (Input1 + Input2) else 0));
+
+  __ASSERT = (__ASSUME__HIST => (__GUARANTEE1 and __GUARANTEE0));
+
+  --%IVC __GUARANTEE0, __GUARANTEE1;
+
+tel;
+
+node main(
+  A_sub__Output : int;
+  A_sub____ASSUME0 : bool;
+  A_sub____ASSUME__HIST : bool;
+  B_sub__Output : int;
+  B_sub____ASSUME0 : bool;
+  B_sub____ASSUME__HIST : bool;
+  C_sub__mode : int;
+  C_sub__Output : int;
+  C_sub____ASSUME__HIST : bool;
+  mode : int;
+  Output : int;
+  A_sub__Input : int;
+  A_sub__time : real;
+  B_sub__Input : int;
+  B_sub__time : real;
+  C_sub__Input1 : int;
+  C_sub__Input2 : int;
+  C_sub__time : real;
+  Input : int;
+  A_sub_Dispatch : bool;
+  A_sub_Complete : bool;
+  B_sub_Dispatch : bool;
+  B_sub_Complete : bool;
+  C_sub_Dispatch : bool;
+  C_sub_Complete : bool;
+  tick : int;
+  time : real
+) returns (
+
+);
+var
+  __ASSUME0 : bool;
+  __ASSUME__HIST : bool;
+  __ASSUME999 : bool;
+  A_sub__Input_ASSUME : bool;
+  B_sub__Input_ASSUME : bool;
+  C_sub__Input1_ASSUME : bool;
+  C_sub__Input2_ASSUME : bool;
+  __GUARANTEE0 : bool;
+  __GUARANTEE1 : bool;
+let
+  --%MAIN;
+  __ASSUME0 = (Input < 10);
+
+  __ASSUME__HIST = (C_sub____ASSUME__HIST and (B_sub____ASSUME__HIST and (A_sub____ASSUME__HIST and true)));
+
+  __GUARANTEE0 = (tick = 6) => (mode >= 0);
+
+  __GUARANTEE1 = (tick = 6) => (Output < 49);
+
+  assert __ASSUME0;
+
+  assert (time = A_sub__time);
+
+  assert condact(A_sub_Complete, _TOP__A_sub(A_sub____ASSUME__HIST, A_sub____ASSUME0, A_sub__Input, A_sub__time, A_sub__Output), true);
+  A_sub__Input_ASSUME = (__Between(A_sub_Dispatch, A_sub_Complete) => (true -> (A_sub__Input = pre(A_sub__Input))));
+  assert (not A_sub_Complete) => (true -> (A_sub__Output = pre(A_sub__Output)));
+  assert (not A_sub_Complete) => (A_sub____ASSUME0 = (true -> pre(A_sub____ASSUME0)));
+
+  assert (A_sub____ASSUME__HIST = __HIST(A_sub____ASSUME0));
+
+  assert (time = B_sub__time);
+
+  assert condact(B_sub_Complete, _TOP__B_sub(B_sub____ASSUME__HIST, B_sub____ASSUME0, B_sub__Input, B_sub__time, B_sub__Output), true);
+  B_sub__Input_ASSUME = (__Between(B_sub_Dispatch, B_sub_Complete) => (true -> (B_sub__Input = pre(B_sub__Input))));
+  assert (not B_sub_Complete) => (true -> (B_sub__Output = pre(B_sub__Output)));
+  assert (not B_sub_Complete) => (B_sub____ASSUME0 = (true -> pre(B_sub____ASSUME0)));
+
+  assert (B_sub____ASSUME__HIST = __HIST(B_sub____ASSUME0));
+
+  assert (time = C_sub__time);
+
+  assert condact(C_sub_Complete, _TOP__C_sub(C_sub____ASSUME__HIST, C_sub__Input1, C_sub__Input2, C_sub__time, C_sub__mode, C_sub__Output), true);
+  C_sub__Input1_ASSUME = (__Between(C_sub_Dispatch, C_sub_Complete) => (true -> (C_sub__Input1 = pre(C_sub__Input1))));
+  C_sub__Input2_ASSUME = (__Between(C_sub_Dispatch, C_sub_Complete) => (true -> (C_sub__Input2 = pre(C_sub__Input2))));
+  assert (not C_sub_Complete) => (true -> (C_sub__mode = pre(C_sub__mode)));
+  assert (not C_sub_Complete) => (true -> (C_sub__Output = pre(C_sub__Output)));
+
+  assert (C_sub____ASSUME__HIST = __HIST(true));
+
+  assert (Input = A_sub__Input);
+
+  assert (A_sub__Output = B_sub__Input);
+
+  assert (A_sub__Output = C_sub__Input1);
+
+  assert (B_sub__Output = C_sub__Input2);
+
+  assert (C_sub__Output = Output);
+
+  assert (mode = C_sub__mode);
+
+  __ASSUME999 = (A_sub_Dispatch = ((tick = 3))) and (A_sub_Complete = ((tick = 4))) and (B_sub_Dispatch = ((tick = 1))) and (B_sub_Complete = ((tick = 2))) and (C_sub_Dispatch = ((tick = 5))) and (C_sub_Complete = ((tick = 6)));
+  assert __ASSUME999;
+  assert (tick = __CircularCounter(1, 1, (false -> (pre(tick = 6)))));
+  assert (not (tick = 1)) => (true -> (Input = pre(Input)));
+  assert true;
+
+  assert (((time = 0.0) -> (time > (pre time))) and (true -> (time = ((pre time) + (time - (pre time))))));
+
+  --%PROPERTY A_sub____ASSUME0;
+  --%PROPERTY B_sub____ASSUME0;
+  --%PROPERTY __ASSUME__HIST;
+  --%PROPERTY A_sub__Input_ASSUME;
+  --%PROPERTY B_sub__Input_ASSUME;
+  --%PROPERTY C_sub__Input1_ASSUME;
+  --%PROPERTY C_sub__Input2_ASSUME;
+  --%PROPERTY __GUARANTEE0;
+  --%PROPERTY __GUARANTEE1;
+
+  --%IVC __ASSUME0;
+
+tel;
+
+node Integer_Toy__C__test(
+  mode : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (mode > 2);
+
+tel;
+
+node _CLOCKED_Integer_Toy__C__test(
+  _CLK : bool;
+  _INIT : bool;
+  mode : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (if _CLK then (mode > 2) else (pre _outvar));
+
+tel;
+
+node __HIST(
+  input : bool
+) returns (
+  hist : bool
+);
+let
+  hist = (input -> ((pre hist) and input));
+
+tel;
+
+node __MinPos(
+  a : real;
+  b : real
+) returns (
+  ret : real
+);
+let
+  ret = (if (a <= 0.0) then b else (if (b <= 0.0) then a else (if (a <= b) then a else b)));
+
+tel;
+
+node __Rise(
+  input : bool
+) returns (
+  output : bool
+);
+let
+  output = (input -> ((pre (not input)) and input));
+
+tel;
+
+node __Fall(
+  input : bool
+) returns (
+  output : bool
+);
+let
+  output = ((not input) -> ((pre input) and (not input)));
+
+tel;
+
+node __CircularCounter(
+  init : int;
+  incr : int;
+  reset : bool
+) returns (
+  count : int
+);
+let
+  count = (if reset then init else (init -> ((pre count) + incr)));
+tel;
+node __Between(
+  start : bool;
+  end : bool
+) returns (
+  out : bool
+);
+let
+  out = (if (false -> (pre start)) then true else (if (false -> (pre end)) then false else (false -> (pre out))));
+tel;

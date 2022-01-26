@@ -1,0 +1,86 @@
+package Simple_Feedback_Sch
+public 
+   with Base_Types;
+      
+system A
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;			
+	annex agree {** 
+		-- 	Virtual Events	
+		eq Dispatch: bool;
+		eq Complete: bool;		
+
+		guarantee A_Hold_Output "Output data should hold till next Complete" : 
+			not Complete => (Output = prev(Output, 0));							
+		guarantee "A output" : Complete => (Output = 2*Input);
+	**};	
+end A ; 
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+	annex agree {** 
+		-- 	Virtual Events	
+		eq Dispatch: bool;
+		eq Complete: bool;	
+		guarantee B_Hold_Output "Output data should hold till next Complete" : 
+			not Complete => (Output = prev(Output, 0));							
+		guarantee "B output" :  Complete => (Output = Input + 1);
+	**};	
+end B ; 
+  
+system top_level
+	features
+		x: out data port Base_Types::Integer;
+		y: out data port Base_Types::Integer;
+	annex agree {** 			
+		-- Counter starts with init + incr, reset to init
+		node Counter (init: int, incr: int, reset: bool)	
+		returns (count: int);
+		let
+			count = if reset then init
+					else init-> (pre(count) + incr);
+		tel;
+
+		eq A_Dispatch: bool;
+		eq A_Complete: bool;
+		eq B_Dispatch: bool;
+		eq B_Complete: bool;
+			
+		const PERIOD :	 int = 4;					
+		eq Frame : int = Counter(1, 1, prev(Frame = PERIOD, false));
+		assume "schedule" :
+			A_Dispatch = (Frame = 1) and
+			A_Complete = (Frame = 2) and					
+			B_Dispatch = (Frame = 3) and	
+			B_Complete = (Frame = 4);								
+			
+--	    guarantee "System output" : x = -1;		
+		eq step: int = 1 -> pre(step) + 1;
+		-- To show a valid trace of certain length
+		guarantee "Get a simulation trace": (step = 12) => (x = -1);
+		
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents 
+		A_sub : system A ; 
+		B_sub : system B ; 
+	connections
+		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		B_TO_A : port B_sub.Output -> A_sub.Input {Communication_Properties::Timing => immediate;};
+		B_TO_Output : port B_sub.Output -> x {Communication_Properties::Timing => immediate;}; 
+		A_TO_Output : port A_sub.Output -> y {Communication_Properties::Timing => immediate;}; 
+
+	annex agree {**
+		assign A_Dispatch = A_sub.Dispatch;
+		assign A_Complete = A_sub.Complete;	
+		assign B_Dispatch = B_sub.Dispatch;
+		assign B_Complete = B_sub.Complete;
+	**};
+			
+end top_level.Impl;
+	
+end Simple_Feedback_Sch;

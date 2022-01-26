@@ -1,0 +1,67 @@
+package Downsample
+public 
+   with Base_Types;
+      
+system A
+	features
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "A output" : Output = 1 + prev(Output, 0);
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "B output" :  Output = Input;
+	**};	
+end B ; 
+
+system C
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "C output" :  Output = Input;
+	**};	
+end C ; 
+
+system D
+	features
+		Input1: in data port Base_Types::Integer;
+		Input2: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 						
+		guarantee "D output" :  Output = Input1 - Input2;
+	**};	
+end D ; 
+  
+system top_level
+	features
+		x: out data port Base_Types::Integer;
+	annex agree {** 			    
+		guarantee "System output" : x = -1;				
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents 
+		A_sub : system A ; 
+		B_sub : system B ;
+		C_sub : system C ; 
+		D_sub : system D ;		 
+	connections		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_sub.Output -> C_sub.Input {Communication_Properties::Timing => immediate;};
+		B_TO_D : port B_sub.Output -> D_sub.Input1 {Communication_Properties::Timing => immediate;};
+		C_TO_D : port C_sub.Output -> D_sub.Input2 {Communication_Properties::Timing => immediate;};
+		D_TO_Output : port D_sub.Output -> x {Communication_Properties::Timing => immediate;}; 
+			
+end top_level.Impl;
+	
+end Downsample;

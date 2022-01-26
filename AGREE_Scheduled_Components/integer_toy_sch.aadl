@@ -1,0 +1,117 @@
+package Integer_Toy_Sch
+public 
+   with Base_Types;
+      
+system A
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		eq Dispatch: bool;
+		eq Complete: bool;				
+		guarantee A_Hold_Output "Output freeze" : 
+			not Complete => (Output = prev(Output, 0));	
+		assume "A input range" : Dispatch => Input < 20;
+		guarantee "A output range" : Complete => Output < 2*Input;
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		eq Dispatch: bool;
+		eq Complete: bool;	
+		guarantee B_Hold_Output "Output freeze" : 
+			not Complete => (Output = prev(Output, 0));						
+		assume "B input range" : Dispatch => Input < 20;
+		guarantee "B output range" : Complete => Output < Input + 15;
+	**};	
+end B ; 
+
+system C
+	features
+		Input1: in data port Base_Types::Integer;
+		Input2: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		eq Dispatch: bool;
+		eq Complete: bool;	
+		guarantee C_Hold_Output "Output freeze" : 
+			not Complete => (Output = prev(Output, 0));						
+	  	guarantee "C output range" : Complete => Output = Input1 + Input2;
+	**};	
+end C ; 
+   
+system top_level
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+	annex agree {** 
+		eq A_sub_Dispatch: bool;
+		eq A_sub_Complete: bool;
+		eq B_sub_Dispatch: bool;
+		eq B_sub_Complete: bool;		
+		eq C_sub_Dispatch: bool;
+		eq C_sub_Complete: bool;
+		
+		-- Counter starts with init + incr, reset to init
+		node CircularCounter (init: int, incr: int, reset: bool)	
+		returns (count: int);
+		let
+			count = if reset then init
+					else init-> (pre(count) + incr);
+		tel;
+
+		-- return true if between start(not inculding start) and end (including end)
+		node Between (start: bool, end: bool)	
+		returns (out: bool);
+		let
+			out = if false->pre(start) then true
+				  else if false->pre(end) then false
+				  else false->pre(out);
+		tel;
+		eq interval : bool = Between(A_sub_Dispatch, A_sub_Complete);
+		
+		const PERIOD :	 int = 7;					
+		eq tick : int = CircularCounter(1, 1, prev(tick = PERIOD, false));
+		assume "Schedule" :
+			A_sub_Dispatch = (tick = 1) and
+			A_sub_Complete = (tick = 3) and
+			B_sub_Dispatch = (tick = 4) and
+			B_sub_Complete = (tick = 5) and	
+		    C_sub_Dispatch = (tick = 6) and
+			C_sub_Complete = (tick = 7);
+			
+	  eq mode : int;
+		assume "System input range " : Input < 10;
+		assume "System input freeze " : not A_sub_Dispatch => Input = prev(Input, 0);
+		guarantee "System output range" : C_sub_Complete => Output < 49;
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents
+		A_sub : system A ; 
+		B_sub : system B ; 
+		C_sub : system C ; 
+	connections
+		IN_TO_A : port Input -> A_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_sub.Output -> C_sub.Input1 {Communication_Properties::Timing => immediate;};
+		B_TO_C : port B_sub.Output -> C_sub.Input2 {Communication_Properties::Timing => immediate;};
+		C_TO_Output : port C_sub.Output -> Output {Communication_Properties::Timing => immediate;}; 
+
+	annex agree {**
+		assign A_sub_Dispatch = A_sub.Dispatch;
+		assign A_sub_Complete = A_sub.Complete;	
+		assign B_sub_Dispatch = B_sub.Dispatch;
+		assign B_sub_Complete = B_sub.Complete;
+	**};	
+end top_level.Impl;
+	
+end Integer_Toy_Sch;

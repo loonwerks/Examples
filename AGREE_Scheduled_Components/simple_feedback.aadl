@@ -1,0 +1,46 @@
+package Simple_Feedback
+public 
+   with Base_Types;
+      
+system A
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "A output" : Output = 2*Input;
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "B output" : Output = Input + 1;
+	**};	
+end B ; 
+  
+system top_level
+	features
+		x: out data port Base_Types::Integer;
+		y: out data port Base_Types::Integer;
+	annex agree {** 
+	    guarantee "System output x" : x = -1; 	
+	    guarantee "System output y" : y = -2; 	
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents
+		A_sub : system A ; 
+		B_sub : system B ; 
+	connections
+		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		B_TO_A : port B_sub.Output -> A_sub.Input {Communication_Properties::Timing => immediate;};
+		B_TO_Output : port B_sub.Output -> x {Communication_Properties::Timing => immediate;}; 
+		A_TO_Output : port A_sub.Output -> y {Communication_Properties::Timing => immediate;}; 	
+end top_level.Impl;
+	
+end Simple_Feedback;
