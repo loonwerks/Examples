@@ -32,7 +32,7 @@ To generate Lustre model with scheduling semantics
 Example:  
 >sch.py -i downsample.lus -s downsample_sch.txt  
 
-To check property:  
+To check property
 ----------------------------------------------------
 >jkind lustre_file_name.lus  
 Example:   
