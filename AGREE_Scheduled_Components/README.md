@@ -34,6 +34,6 @@ Example:
 
 To check property
 ----------------------------------------------------
->jkind lustre_file_name.lus  
+>jkind -solver z3 lustre_file_name.lus  
 Example:   
 >jkind downsample_sch.lus  
