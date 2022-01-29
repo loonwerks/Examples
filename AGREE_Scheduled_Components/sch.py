@@ -274,7 +274,7 @@ def main(argv):
 	line5 = '  out : bool\n'
 	line6 = ');\n'
 	line7 = 'let\n'
-	line8 = '  out = (if (false -> (pre start)) then true else (if (false -> (pre end)) then false else (false -> (pre out))));\n'
+	line8 = '  out = (false -> (if (pre start) then true else (if (pre end) then false else (pre out))));\n'
 	line9 = 'tel;\n'	
 	fout.writelines([line1,line2,line3,line4,line5,line6,line7,line8,line9])		
 	
